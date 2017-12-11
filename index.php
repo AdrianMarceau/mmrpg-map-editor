@@ -113,6 +113,10 @@ if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
 <script type="text/javascript" src="scripts/script.js"></script>
 <script type="text/javascript">
 
+// Define base hrefs for loading content
+baseHref = '<?= MMRPG_BASE_HREF ?>';
+baseAssetHref = '<?= MMRPG_BASE_ASSET_HREF ?>';
+
 // Define the map options we can use in the editor
 mapOptions = <?= json_encode($map_options) ?>;
 

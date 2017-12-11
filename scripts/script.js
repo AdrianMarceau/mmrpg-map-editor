@@ -1,14 +1,17 @@
 
+
 var $map;
 var $grid;
-var gridSize;
-
 var $shift;
 var $views;
 var $tools;
 var $export;
 
+var gridSize;
 var mapOptions;
+
+var baseHref = 'http://mmrpg.map.editor/';
+var baseAssetHref = 'http://rpg.megamanpoweredup.net/';
 
 $(document).ready(function(){
 
@@ -19,6 +22,8 @@ $(document).ready(function(){
         cols: parseInt($grid.attr('data-cols')),
         rows: parseInt($grid.attr('data-rows'))
         };
+
+    if (typeof assetURL !== 'string'){}
 
     $shift = $('.shift');
     $views = $('.views');
@@ -250,7 +255,7 @@ function changeCellBattle($cell, newTile){
         // Battle doesn't exist, let's create one now
         var battleToken = mapOptions['battles'][0];
         var fieldToken = mapOptions['fields'][0];
-        var fieldImage = 'http://local.rpg.megamanpoweredup.net/images/fields/'+fieldToken+'/battle-field_avatar.png';
+        var fieldImage = baseAssetHref+'images/fields/'+fieldToken+'/battle-field_avatar.png';
         $field = $('<img class="sprite field '+battleToken+' '+fieldToken+'" data-field="'+fieldToken+'" src="'+fieldImage+'" />');
         $field.appendTo($cell);
         $battle = $('<div class="sprite battle '+battleToken+'" data-battle="'+battleToken+'"></div>');
@@ -283,7 +288,7 @@ function changeCellField($cell, newTile){
         if (fieldTokenKey + 1 <= fieldTokenMaxKey){ var newFieldTokenKey = fieldTokenKey + 1; }
         else { var newFieldTokenKey = 0; }
         var newFieldToken = mapOptions['fields'][newFieldTokenKey];
-        var newFieldImage = 'http://local.rpg.megamanpoweredup.net/images/fields/'+newFieldToken+'/battle-field_avatar.png';
+        var newFieldImage = baseAssetHref+'images/fields/'+newFieldToken+'/battle-field_avatar.png';
         //console.log('should be changed to '+newFieldToken+' (key '+newFieldTokenKey+')');
         $field.removeClass(fieldToken).addClass(newFieldToken).attr('data-field', newFieldToken).attr('src', newFieldImage);
 
