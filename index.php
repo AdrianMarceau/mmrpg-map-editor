@@ -12,13 +12,17 @@ $map_tiles = array();
 $map_battles = array();
 
 // Define the max rows and cols
-$row_max = 18;
 $col_max = 23;
+$row_max = 16;
 
 // Include map layout data from the appropriate grid file
 $map_num = !empty($_GET['map']) && is_numeric($_GET['map']) ? $_GET['map'] : 0;
 if (!file_exists('maps/map'.$map_num.'.php')){ $map_num = 0; }
 if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
+
+// Calculate map width in pixels (with all cells + padding)
+$cell_width = 40;
+$map_width = $col_max * $cell_width;
 
 ?>
 <!DOCTYPE html>
@@ -50,7 +54,7 @@ if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
 
     <div class="map" data-view="all" data-edit="">
         <div class="wrapper">
-            <table class="grid" data-cols="23" data-rows="18">
+            <table class="grid" data-cols="<?= $col_max ?>" data-rows="<?= $row_max ?>" style="<?= 'width: '.(($col_max * 40) + 2).'px;' ?>">
                 <tbody>
                     <?
                     for ($row = 1; $row <= $row_max; $row++){
@@ -106,7 +110,7 @@ if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
     </div>
 
     <div class="tools">
-        <textarea name="export" class="export" cols="60" rows="10"></textarea>
+        <textarea name="export" class="export" cols="60" rows="10" readonly="readonly"></textarea>
     </div>
 
 <script type="text/javascript" src="<?= MMRPG_BASE_ASSET_HREF ?>scripts/jquery.js"></script>

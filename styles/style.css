@@ -12,7 +12,7 @@ body {
     display: block;
     box-sizing: border-box;
     width: 1000px;
-    height: 800px;
+    height: auto;
     margin: 20px auto;
     padding: 16px;
     background-color: #252525;
@@ -22,10 +22,10 @@ body {
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
 }
 .map .wrapper {
-    display: block;
+    display: inline-block;
     box-sizing: border-box;
-    width: 966px;
-    height: 766px;
+    width: auto;
+    height: auto;
     margin: 0;
     padding: 20px;
     border: 2px solid #191919;
