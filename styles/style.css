@@ -1,0 +1,199 @@
+
+body {
+    background-color: #141414;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+.map {
+    display: block;
+    box-sizing: border-box;
+    width: 1000px;
+    height: 800px;
+    margin: 20px auto;
+    padding: 40px;
+    background-image: url(../images/background.png);
+}
+.map .wrapper {
+    display: block;
+    box-sizing: border-box;
+    width: 920px;
+    height: 720px;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+.map .wrapper table {
+    table-layout: fixed;
+    width: 100%;
+    height: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.map .wrapper table td {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+}
+.map .wrapper .cell {
+    display: block;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    cursor: default;
+}
+.map:not([data-edit=""]) .wrapper .cell {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.00);
+    transition: background-color 0.2s;
+}
+.map:not([data-edit=""]) .wrapper .cell:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.map .wrapper .cell .tile,
+.map .wrapper .cell .battle,
+.map .wrapper .cell .field {
+    display: block;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: none;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+}
+.map .wrapper .cell .tile {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+.map .wrapper .cell .battle {
+
+}
+.map .wrapper .cell .field {
+
+}
+
+.map .wrapper .cell .field.mecha { width: 18px; height: 18px; top: 11px; left: 11px; }
+.map .wrapper .cell .field.master { width: 26px; height: 26px; top: 7px; left: 7px; }
+.map .wrapper .cell .field.boss { width: 32px; height: 32px; top: 4px; left: 4px; }
+
+.map .wrapper .cell .tile.h-line { background-image: url(../images/tiles/h-line.png); }
+.map .wrapper .cell .tile.v-line { background-image: url(../images/tiles/v-line.png); }
+
+.map .wrapper .cell .tile.l-stub { background-image: url(../images/tiles/l-stub.png); }
+.map .wrapper .cell .tile.r-stub { background-image: url(../images/tiles/r-stub.png); }
+.map .wrapper .cell .tile.t-stub { background-image: url(../images/tiles/t-stub.png); }
+.map .wrapper .cell .tile.b-stub { background-image: url(../images/tiles/b-stub.png); }
+
+.map .wrapper .cell .tile.tl-joint { background-image: url(../images/tiles/tl-joint.png); }
+.map .wrapper .cell .tile.tr-joint { background-image: url(../images/tiles/tr-joint.png); }
+.map .wrapper .cell .tile.bl-joint { background-image: url(../images/tiles/bl-joint.png); }
+.map .wrapper .cell .tile.br-joint { background-image: url(../images/tiles/br-joint.png); }
+
+.map .wrapper .cell .tile.l-tee { background-image: url(../images/tiles/l-tee.png); }
+.map .wrapper .cell .tile.r-tee { background-image: url(../images/tiles/r-tee.png); }
+.map .wrapper .cell .tile.t-tee { background-image: url(../images/tiles/t-tee.png); }
+.map .wrapper .cell .tile.b-tee { background-image: url(../images/tiles/b-tee.png); }
+
+.map .wrapper .cell .tile.cross { background-image: url(../images/tiles/cross.png); }
+
+.map .wrapper .cell .battle.mecha { background-image: url(../images/battles/mecha.png); }
+.map .wrapper .cell .battle.master { background-image: url(../images/battles/master.png); }
+.map .wrapper .cell .battle.boss { background-image: url(../images/battles/boss.png); }
+
+
+.map[data-view="tiles"] .wrapper .cell .battle,
+.map[data-view="tiles"] .wrapper .cell .field,
+.map[data-view="battles"] .wrapper .cell .tile,
+.map[data-view="fields"] .wrapper .cell .tile {
+    pointer-events: none;
+    opacity: 0.25;
+}
+
+
+.controls {
+    display: block;
+    max-width: 1000px;
+    margin: 20px auto 0;
+    padding: 0 60px;
+    text-align: center;
+}
+.controls:after {
+    content: "";
+    display: block;
+    clear: both;
+    height: 0;
+}
+.controls .shift,
+.controls .views {
+
+}
+.controls .shift {
+    float: left;
+    text-align: left;
+}
+.controls .views {
+    float: right;
+    text-align: right;
+}
+.controls .shift .label,
+.controls .views .label {
+  display: inline-block;
+  border: 1px solid #101010;
+  background-color: #101010;
+  border-radius: 3px;
+  margin: 0;
+  padding: 6px 9px;
+  color: #969696;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1;
+}
+.controls .shift .button,
+.controls .views .button {
+  display: inline-block;
+  border: 1px solid #262626;
+  background-color: #1a1a1a;
+  border-radius: 3px;
+  margin: 0 0 0 5px;
+  padding: 6px 9px;
+  color: #696969;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+.controls .shift .button:hover,
+.controls .views .button:hover,
+.controls .views .button.active {
+  color: #DEDEDE;
+}
+.controls .shift .button {
+    margin-right: 5px;
+}
+.controls .views .button {
+    min-width: 75px;
+    margin-left: 5px;
+}
+
+.tools {
+    display: block;
+    max-width: 1000px;
+    margin: 20px auto 0;
+    padding: 0 60px 30px;
+}
+.tools .export {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 auto 10px;
+    border: 1px solid #262626;
+    background-color: #1a1a1a;
+    padding: 6px;
+    color: #CACACA;
+    font-family: "Courier New";
+}
+

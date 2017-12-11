@@ -1,0 +1,82 @@
+<?php
+
+// Define the tiles that should appear on the map (x54)
+$map_tiles[2][2] = 't-stub';
+$map_tiles[14][2] = 't-stub';
+$map_tiles[2][3] = 'v-line';
+$map_tiles[13][3] = 'l-stub';
+$map_tiles[14][3] = 'cross';
+$map_tiles[15][3] = 'r-stub';
+$map_tiles[2][4] = 'bl-joint';
+$map_tiles[3][4] = 'h-line';
+$map_tiles[4][4] = 't-tee';
+$map_tiles[5][4] = 'h-line';
+$map_tiles[6][4] = 'h-line';
+$map_tiles[7][4] = 'tr-joint';
+$map_tiles[14][4] = 'v-line';
+$map_tiles[4][5] = 'v-line';
+$map_tiles[7][5] = 'l-tee';
+$map_tiles[8][5] = 'h-line';
+$map_tiles[9][5] = 'r-stub';
+$map_tiles[14][5] = 'v-line';
+$map_tiles[4][6] = 'v-line';
+$map_tiles[7][6] = 'v-line';
+$map_tiles[12][6] = 'l-stub';
+$map_tiles[13][6] = 'h-line';
+$map_tiles[14][6] = 'cross';
+$map_tiles[15][6] = 'h-line';
+$map_tiles[16][6] = 'r-stub';
+$map_tiles[2][7] = 'l-stub';
+$map_tiles[3][7] = 'h-line';
+$map_tiles[4][7] = 'b-tee';
+$map_tiles[5][7] = 't-tee';
+$map_tiles[6][7] = 'h-line';
+$map_tiles[7][7] = 'br-joint';
+$map_tiles[14][7] = 'v-line';
+$map_tiles[5][8] = 'v-line';
+$map_tiles[12][8] = 'l-stub';
+$map_tiles[13][8] = 'h-line';
+$map_tiles[14][8] = 'cross';
+$map_tiles[15][8] = 'h-line';
+$map_tiles[16][8] = 'r-stub';
+$map_tiles[5][9] = 'v-line';
+$map_tiles[14][9] = 'v-line';
+$map_tiles[5][10] = 'l-tee';
+$map_tiles[6][10] = 'h-line';
+$map_tiles[7][10] = 'h-line';
+$map_tiles[8][10] = 'h-line';
+$map_tiles[9][10] = 't-tee';
+$map_tiles[10][10] = 'h-line';
+$map_tiles[11][10] = 'h-line';
+$map_tiles[12][10] = 't-tee';
+$map_tiles[13][10] = 'h-line';
+$map_tiles[14][10] = 'br-joint';
+$map_tiles[5][11] = 'v-line';
+$map_tiles[9][11] = 'v-line';
+$map_tiles[5][12] = 'b-stub';
+$map_tiles[9][12] = 'b-stub';
+
+// Define the battles that should appear on the map (x21)
+$map_battles[14][3] = 'boss/intro-field';
+$map_battles[7][5] = 'mecha/abandoned-warehouse';
+$map_battles[8][5] = 'mecha/abandoned-warehouse';
+$map_battles[9][5] = 'master/abandoned-warehouse';
+$map_battles[12][6] = 'master/intro-field';
+$map_battles[13][6] = 'mecha/intro-field';
+$map_battles[15][6] = 'mecha/intro-field';
+$map_battles[16][6] = 'master/intro-field';
+$map_battles[2][7] = 'master/orb-city';
+$map_battles[3][7] = 'mecha/orb-city';
+$map_battles[4][7] = 'mecha/orb-city';
+$map_battles[12][8] = 'master/intro-field';
+$map_battles[13][8] = 'mecha/intro-field';
+$map_battles[15][8] = 'mecha/intro-field';
+$map_battles[16][8] = 'master/intro-field';
+$map_battles[5][10] = 'mecha/mountain-mines';
+$map_battles[9][10] = 'mecha/steel-mill';
+$map_battles[5][11] = 'mecha/mountain-mines';
+$map_battles[9][11] = 'mecha/steel-mill';
+$map_battles[5][12] = 'master/mountain-mines';
+$map_battles[9][12] = 'master/steel-mill';
+
+?>
