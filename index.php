@@ -1,5 +1,8 @@
 <?php
 
+// Require the config file for paths
+require('includes/config.php');
+
 // Require the tile, battle, and field data index file
 require('includes/options.php');
 
