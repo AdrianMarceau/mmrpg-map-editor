@@ -25,7 +25,7 @@ if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
 <html>
 <head>
     <title>Overworld Test</title>
-    <link type="text/css" rel="stylesheet" href="styles/style.css" />
+    <link type="text/css" rel="stylesheet" href="styles/style.css?<?= MMRPG_CACHE_DATE ?>" />
 </head>
 <body>
 
@@ -81,7 +81,7 @@ if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
 
                                 $field_class = $battle_data[0];
                                 $field_token = isset($battle_data[1]) ? $battle_data[1] : $field_tokens[0];
-                                $field_image = 'http://local.rpg.megamanpoweredup.net/images/fields/'.$field_token.'/battle-field_avatar.png';
+                                $field_image = MMRPG_BASE_ASSET_HREF.'images/fields/'.$field_token.'/battle-field_avatar.png';
                                 $cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" src="'.$field_image.'" />';
                                 $cell_title .= ' | '.$field_token;
 
@@ -109,8 +109,8 @@ if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
         <textarea name="export" class="export" cols="60" rows="10"></textarea>
     </div>
 
-<script type="text/javascript" src="http://local.rpg.megamanpoweredup.net/scripts/jquery.js"></script>
-<script type="text/javascript" src="scripts/script.js"></script>
+<script type="text/javascript" src="<?= MMRPG_BASE_ASSET_HREF ?>scripts/jquery.js"></script>
+<script type="text/javascript" src="scripts/script.js?<?= MMRPG_CACHE_DATE ?>"></script>
 <script type="text/javascript">
 
 // Define base hrefs for loading content
