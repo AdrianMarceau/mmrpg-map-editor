@@ -8,6 +8,7 @@ body {
     background-repeat: repeat;
     background-position: 0 0;
 }
+
 .map {
     display: block;
     box-sizing: border-box;
@@ -259,7 +260,7 @@ body {
     display: block;
     max-width: 1000px;
     margin: 20px auto 0;
-    padding: 0 60px 30px;
+    padding: 0 60px 10px;
 }
 .tools .export {
     display: block;
@@ -271,5 +272,15 @@ body {
     padding: 6px;
     color: #CACACA;
     font-family: "Courier New";
+}
+
+.version {
+    display: block;
+    max-width: 1000px;
+    margin: 0 auto 0;
+    padding: 0 60px 30px;
+    color: #636363;
+    font-size: 12px;
+    text-align: center;
 }
 

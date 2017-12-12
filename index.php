@@ -11,11 +11,11 @@ require('includes/options.php');
 $this_map_id = !empty($_GET['map']) && is_numeric($_GET['map']) ? $_GET['map'] : 0;
 
 // Define properties for the pallet
-$map_pallet_cols = 22;
+$map_pallet_cols = 23;
 $map_pallet_rows = 2;
 
 // Define the max rows and cols
-$map_canvas_cols = 22;
+$map_canvas_cols = 23;
 $map_canvas_rows = 16;
 
 // Include map layout data from the appropriate grid file
@@ -98,6 +98,10 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
 
     <div class="tools">
         <textarea name="export" class="export" cols="60" rows="10" readonly="readonly"></textarea>
+    </div>
+
+    <div class="version">
+        Last Updated <?= preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})\-[0-9]+$/', '$1-$2-$3', MMRPG_CACHE_DATE) ?>
     </div>
 
 <script type="text/javascript" src="<?= MMRPG_BASE_ASSET_HREF ?>scripts/jquery.js"></script>
