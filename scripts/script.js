@@ -56,7 +56,7 @@ $(document).ready(function(){
         e.preventDefault();
         var $cell = $(this);
         var edit = $map.attr('data-edit');
-        if (edit === 'tiles'){ changeCellTile($cell); }
+        if (edit === 'paths'){ changeCellPath($cell); }
         else if (edit === 'battles'){ changeCellBattle($cell); }
         else if (edit === 'fields'){ changeCellField($cell); }
         else { return false; }
@@ -185,37 +185,37 @@ function canShiftMapDown(){
     return $sprites.length ? false : true;
 }
 
-// Define a function for editing cell's tile to something else
-function changeCellTile($cell, newTile){
+// Define a function for editing cell's path to something else
+function changeCellPath($cell, newPath){
 
     var mapChanged = false;
 
-    var $tile = $cell.find('.tile[data-tile]');
+    var $path = $cell.find('.path[data-path]');
 
-    if ($tile.length){
+    if ($path.length){
 
-        // Tile already exists, scroll through options
-        var tileToken = $tile.attr('data-tile');
-        var tileTokenKey = mapOptions['tiles'].indexOf(tileToken);
-        var tileTokenMaxKey = mapOptions['tiles'].length - 1;
-        //console.log('clicked a '+tileToken+' tile (key '+tileTokenKey+' of max '+tileTokenMaxKey+')');
-        if (tileTokenKey + 1 <= tileTokenMaxKey){
-            var newTileTokenKey = tileTokenKey + 1;
-            var newTileToken = mapOptions['tiles'][newTileTokenKey];
-            //console.log('should be changed to '+newTileToken+' (key '+newTileTokenKey+')');
-            $tile.removeClass(tileToken).addClass(newTileToken).attr('data-tile', newTileToken);
+        // Path already exists, scroll through options
+        var pathToken = $path.attr('data-path');
+        var pathTokenKey = mapOptions['paths'].indexOf(pathToken);
+        var pathTokenMaxKey = mapOptions['paths'].length - 1;
+        //console.log('clicked a '+pathToken+' path (key '+pathTokenKey+' of max '+pathTokenMaxKey+')');
+        if (pathTokenKey + 1 <= pathTokenMaxKey){
+            var newPathTokenKey = pathTokenKey + 1;
+            var newPathToken = mapOptions['paths'][newPathTokenKey];
+            //console.log('should be changed to '+newPathToken+' (key '+newPathTokenKey+')');
+            $path.removeClass(pathToken).addClass(newPathToken).attr('data-path', newPathToken);
             mapChanged = true;
             } else {
-            $tile.remove();
+            $path.remove();
             mapChanged = true;
             }
 
         } else {
 
-        // Tile doesn't exist, let's create one now
-        var tileToken = mapOptions['tiles'][0];
-        $tile = $('<div class="sprite tile '+tileToken+'" data-tile="'+tileToken+'"></div>');
-        $tile.prependTo($cell);
+        // Path doesn't exist, let's create one now
+        var pathToken = mapOptions['paths'][0];
+        $path = $('<div class="sprite path '+pathToken+'" data-path="'+pathToken+'"></div>');
+        $path.prependTo($cell);
         mapChanged = true;
 
         }
@@ -226,7 +226,7 @@ function changeCellTile($cell, newTile){
 }
 
 // Define a function for editing cell's battle to something else
-function changeCellBattle($cell, newTile){
+function changeCellBattle($cell, newPath){
 
     var mapChanged = false;
 
@@ -274,7 +274,7 @@ function changeCellBattle($cell, newTile){
 
 
 // Define a function for editing cell's field to something else
-function changeCellField($cell, newTile){
+function changeCellField($cell, newPath){
 
     var mapChanged = false;
 
@@ -314,7 +314,7 @@ function changeCellField($cell, newTile){
 function exportMap(){
     //console.log('exportMap()');
 
-    var mapTiles = [];
+    var mapPaths = [];
     var mapBattles = [];
     $('.cell[data-col][data-row]', $grid).each(function(index){
 
@@ -323,15 +323,15 @@ function exportMap(){
         var row = parseInt($cell.attr('data-row'));
         var name = col+'-'+row;
 
-        var $tile = $('.tile[data-tile]', $cell);
+        var $path = $('.path[data-path]', $cell);
         var $battle = $('.battle[data-battle]', $cell);
         var $field = $('.field[data-field]', $cell);
 
         //console.log('Cell : '+name);
 
-        if ($tile.length){
-            var tileToken = $tile.attr('data-tile');
-            mapTiles.push('$map_tiles['+col+']['+row+'] = \''+tileToken+'\';');
+        if ($path.length){
+            var pathToken = $path.attr('data-path');
+            mapPaths.push('$map_paths['+col+']['+row+'] = \''+pathToken+'\';');
             }
 
         if ($battle.length && $field.length){
@@ -342,15 +342,15 @@ function exportMap(){
 
         });
 
-    //console.log('mapTiles : ', mapTiles);
+    //console.log('mapPaths : ', mapPaths);
     //console.log('mapBattles : ', mapBattles);
 
     var exportString = '';
     exportString += '<\?php \n\n';
 
-    if (mapTiles.length){
-        exportString += '// Define the tiles that should appear on the map (x'+mapTiles.length+') \n';
-        exportString += mapTiles.join('\n');
+    if (mapPaths.length){
+        exportString += '// Define the paths that should appear on the map (x'+mapPaths.length+') \n';
+        exportString += mapPaths.join('\n');
         exportString += '\n\n';
         }
     if (mapBattles.length){

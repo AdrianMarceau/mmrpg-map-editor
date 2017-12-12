@@ -5,7 +5,7 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
 
     // Compensate for missing sprite arrays
     if (!is_array($grid_sprites)){ $grid_sprites = array(); }
-    if (!isset($grid_sprites['tiles'])){ $grid_sprites['tiles'] = array(); }
+    if (!isset($grid_sprites['paths'])){ $grid_sprites['paths'] = array(); }
     if (!isset($grid_sprites['battles'])){ $grid_sprites['battles'] = array(); }
 
     // Calculate map width in pixels (with all cells + padding)
@@ -26,14 +26,14 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                     $cell_markup = '';
                     $cell_title = $col.'-'.$row;
 
-                    // Generate markup for any tiles that appear in this cell
-                    if (isset($grid_sprites['tiles'][$col][$row])){
-                        $tile_data = $grid_sprites['tiles'][$col][$row];
-                        $tile_data = strstr($tile_data, '/') ? explode('/', $tile_data) : array($tile_data);
+                    // Generate markup for any paths that appear in this cell
+                    if (isset($grid_sprites['paths'][$col][$row])){
+                        $path_data = $grid_sprites['paths'][$col][$row];
+                        $path_data = strstr($path_data, '/') ? explode('/', $path_data) : array($path_data);
 
-                        $tile_class = $tile_data[0];
-                        $tile_token = $tile_data[0];
-                        $cell_markup .= '<div class="sprite tile '.$tile_class.'" data-tile="'.$tile_token.'"></div>';
+                        $path_class = $path_data[0];
+                        $path_token = $path_data[0];
+                        $cell_markup .= '<div class="sprite path '.$path_class.'" data-path="'.$path_token.'"></div>';
 
                     }
 

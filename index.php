@@ -3,13 +3,13 @@
 // Require the config file for paths
 require('includes/config.php');
 
-// Require the tile, battle, and field data index file
+// Require the path, battle, and field data index file
 require('includes/options.php');
 require('includes/functions.php');
 
-// Define the arrays for tiles and battles for the map
+// Define the arrays for paths and battles for the map
 $map_offset = array(0, 0);
-$map_tiles = array();
+$map_paths = array();
 $map_battles = array();
 
 // Define the max rows and cols
@@ -45,7 +45,7 @@ if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
 
         <div class="views">
             <a class="button all active" data-view="all">View All</a>
-            <a class="button tiles" data-view="tiles">Edit Tiles</a>
+            <a class="button paths" data-view="paths">Edit Paths</a>
             <a class="button battles" data-view="battles">Edit Battles</a>
             <a class="button fields" data-view="fields">Edit Fields</a>
         </div>
@@ -55,7 +55,7 @@ if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
     <div class="map" data-view="all" data-edit="">
         <div class="wrapper">
             <?= generate_map_grid($canvas_cols, $pallet_rows, 'pallet') ?>
-            <?= generate_map_grid($canvas_cols, $canvas_rows, 'canvas', array('tiles' => $map_tiles, 'battles' => $map_battles)) ?>
+            <?= generate_map_grid($canvas_cols, $canvas_rows, 'canvas', array('paths' => $map_paths, 'battles' => $map_battles)) ?>
         </div>
     </div>
 

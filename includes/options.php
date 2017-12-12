@@ -3,14 +3,14 @@
 // Define an array to hold all the map options
 $map_options = array();
 
-// Define the different kinds of tiles on the map
-$tile_options = array();
-$tile_options = array_merge($tile_options, array('h-line', 'v-line'));
-$tile_options = array_merge($tile_options, array('t-stub', 'r-stub', 'b-stub', 'l-stub'));
-$tile_options = array_merge($tile_options, array('tr-joint', 'br-joint', 'bl-joint', 'tl-joint'));
-$tile_options = array_merge($tile_options, array('t-tee', 'r-tee', 'b-tee', 'l-tee'));
-$tile_options = array_merge($tile_options, array('cross'));
-$map_options['tiles'] = $tile_options;
+// Define the different kinds of paths on the map
+$path_options = array();
+$path_options = array_merge($path_options, array('h-line', 'v-line'));
+$path_options = array_merge($path_options, array('t-stub', 'r-stub', 'b-stub', 'l-stub'));
+$path_options = array_merge($path_options, array('tr-joint', 'br-joint', 'bl-joint', 'tl-joint'));
+$path_options = array_merge($path_options, array('t-tee', 'r-tee', 'b-tee', 'l-tee'));
+$path_options = array_merge($path_options, array('cross'));
+$map_options['paths'] = $path_options;
 
 // Define the different kinds of battles on the map
 $battle_options = array();
