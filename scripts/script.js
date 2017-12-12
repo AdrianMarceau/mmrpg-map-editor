@@ -2,6 +2,7 @@
 
 var $map;
 var $grid;
+var $pallet;
 var $shift;
 var $views;
 var $tools;
@@ -16,7 +17,9 @@ var baseAssetHref = 'http://rpg.megamanpoweredup.net/';
 $(document).ready(function(){
 
     $map = $('.map');
-    $grid = $('.grid', $map);
+
+    $grid = $('.grid.canvas', $map);
+    $pallet = $('.grid.pallet', $map);
 
     gridSize = {
         cols: parseInt($grid.attr('data-cols')),

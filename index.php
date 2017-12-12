@@ -5,6 +5,7 @@ require('includes/config.php');
 
 // Require the tile, battle, and field data index file
 require('includes/options.php');
+require('includes/functions.php');
 
 // Define the arrays for tiles and battles for the map
 $map_offset = array(0, 0);
@@ -12,17 +13,16 @@ $map_tiles = array();
 $map_battles = array();
 
 // Define the max rows and cols
-$col_max = 23;
-$row_max = 16;
+$canvas_cols = 22;
+$canvas_rows = 16;
+
+// Define properties for the pallet
+$pallet_rows = 2;
 
 // Include map layout data from the appropriate grid file
 $map_num = !empty($_GET['map']) && is_numeric($_GET['map']) ? $_GET['map'] : 0;
 if (!file_exists('maps/map'.$map_num.'.php')){ $map_num = 0; }
 if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
-
-// Calculate map width in pixels (with all cells + padding)
-$cell_width = 40;
-$map_width = $col_max * $cell_width;
 
 ?>
 <!DOCTYPE html>
@@ -54,58 +54,8 @@ $map_width = $col_max * $cell_width;
 
     <div class="map" data-view="all" data-edit="">
         <div class="wrapper">
-            <table class="grid" data-cols="<?= $col_max ?>" data-rows="<?= $row_max ?>" style="<?= 'width: '.(($col_max * 40) + 2).'px;' ?>">
-                <tbody>
-                    <?
-                    for ($row = 1; $row <= $row_max; $row++){
-                        $row2 = $row - $map_offset[1];
-
-                        echo '<tr>';
-                        for ($col = 1; $col <= $col_max; $col++){
-                            $col2 = $col - $map_offset[0];
-
-                            $cell_markup = '';
-                            $cell_title = $col2.'-'.$row2;
-
-                            // Generate markup for any tiles that appear in this cell
-                            if (isset($map_tiles[$col2][$row2])){
-                                $tile_data = $map_tiles[$col2][$row2];
-                                $tile_data = strstr($tile_data, '/') ? explode('/', $tile_data) : array($tile_data);
-
-                                $tile_class = $tile_data[0];
-                                $tile_token = $tile_data[0];
-                                $cell_markup .= '<div class="sprite tile '.$tile_class.'" data-tile="'.$tile_token.'"></div>';
-
-                            }
-
-                            // Generate markup for any battles that appear in this cell
-                            if (isset($map_battles[$col2][$row2])){
-                                $battle_data = $map_battles[$col2][$row2];
-                                $battle_data = strstr($battle_data, '/') ? explode('/', $battle_data) : array($battle_data);
-
-                                $field_class = $battle_data[0];
-                                $field_token = isset($battle_data[1]) ? $battle_data[1] : $field_tokens[0];
-                                $field_image = MMRPG_BASE_ASSET_HREF.'images/fields/'.$field_token.'/battle-field_avatar.png';
-                                $cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" src="'.$field_image.'" />';
-                                $cell_title .= ' | '.$field_token;
-
-                                $battle_class = $battle_data[0];
-                                $battle_token = $battle_data[0];
-                                $cell_markup .= '<div class="sprite battle '.$battle_class.'" data-battle="'.$battle_token.'"></div>';
-
-                            }
-
-                            echo '<td title="'.$cell_title.'">';
-                                echo '<div class="cell" data-col="'.$col.'" data-row="'.$row.'">'.$cell_markup.'</div>';
-                            echo '</td>';
-
-                        }
-                        echo '</tr>';
-
-                    }
-                    ?>
-                </tbody>
-            </table>
+            <?= generate_map_grid($canvas_cols, $pallet_rows, 'pallet') ?>
+            <?= generate_map_grid($canvas_cols, $canvas_rows, 'canvas', array('tiles' => $map_tiles, 'battles' => $map_battles)) ?>
         </div>
     </div>
 
