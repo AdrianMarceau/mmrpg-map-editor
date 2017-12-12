@@ -48,7 +48,7 @@ body {
     border: 1px solid transparent;
     background-color: rgba(255, 255, 255, 0.02);
 }
-.map .wrapper .grid + .grid {
+.map .wrapper .grid:last-child {
     margin-top: 20px;
 }
 .map .wrapper .grid td {
@@ -75,7 +75,6 @@ body {
     background-color: #3f3f3f;
     background-color: rgba(255, 255, 255, 0.05);
 }
-
 
 .map .wrapper .grid {
     border: 1px solid transparent;
@@ -113,6 +112,19 @@ body {
 }
 
 
+.map .wrapper .grid.pallet td .cell.active:before {
+    border-color: rgba(255, 255, 255, 0.75);
+}
+
+.map .wrapper .grid.pallet {
+    display: none;
+}
+.map[data-edit=""] .wrapper .grid.pallet.none,
+.map[data-edit="paths"] .wrapper .grid.pallet.paths,
+.map[data-edit="battles"] .wrapper .grid.pallet.battles,
+.map[data-edit="fields"] .wrapper .grid.pallet.fields {
+    display: table;
+}
 
 
 .map .wrapper .cell .path,
@@ -129,7 +141,8 @@ body {
     background-position: 0 0;
     background-repeat: no-repeat;
 }
-.map .wrapper .cell .path {
+
+.map .wrapper .grid.canvas .cell .path {
     background-color: rgba(255, 255, 255, 0.05);
 }
 .map .wrapper .cell .battle {

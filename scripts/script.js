@@ -1,38 +1,43 @@
 
-
+// Predefine var for key dom elements
 var $map;
-var $grid;
+var $canvas;
 var $pallet;
 var $shift;
 var $views;
 var $tools;
 var $export;
 
+// Predefine object vars for map settings
 var gridSize;
 var mapOptions;
 
+// Predefine default base paths for map assets
 var baseHref = 'http://mmrpg.map.editor/';
 var baseAssetHref = 'http://rpg.megamanpoweredup.net/';
 
+// Wait for document ready before delegating events
 $(document).ready(function(){
 
+    //console.log('mapOptions = ', mapOptions);
+    //console.log('----------');
+
+    // Define references to key dom elements
     $map = $('.map');
-
-    $grid = $('.grid.canvas', $map);
+    $canvas = $('.grid.canvas', $map);
     $pallet = $('.grid.pallet', $map);
-
-    gridSize = {
-        cols: parseInt($grid.attr('data-cols')),
-        rows: parseInt($grid.attr('data-rows'))
-        };
-
-    if (typeof assetURL !== 'string'){}
-
     $shift = $('.shift');
     $views = $('.views');
     $tools = $('.tools');
     $export = $('.export', $tools);
 
+    // Collect the grid size from the canvas grid
+    gridSize = {
+        cols: parseInt($canvas.attr('data-cols')),
+        rows: parseInt($canvas.attr('data-rows'))
+        };
+
+    // Define click events for the SHIFT BUTTONS
     $('.button[data-dir]', $shift).bind('click', function(e){
         e.preventDefault();
         var $button = $(this);
@@ -40,6 +45,7 @@ $(document).ready(function(){
         shiftSprites(dir);
         });
 
+    // Define the click events for the VIEW BUTTONS
     $('.button[data-view]', $views).bind('click', function(e){
         e.preventDefault();
         var $button = $(this);
@@ -47,12 +53,29 @@ $(document).ready(function(){
         $('.button[data-view]', $views).removeClass('active');
         $button.addClass('active');
         $map.attr('data-view', view);
-        if (view != 'all'){ $map.attr('data-edit', view); }
-        else { $map.attr('data-edit', ''); }
+        if (view != 'all'){
+            $map.attr('data-edit', view);
+            $targetPallet = $pallet.filter('.'+view);
+            $targetCells = $targetPallet.find('.cell');
+            $targetCells.removeClass('active');
+            $targetCells.first().addClass('active');
+            } else {
+            $map.attr('data-edit', '');
+            }
         });
 
+    // Define the click events for PALLET CELLS
+    $('.cell[data-col][data-row]', $pallet).bind('click', function(e){
+        e.preventDefault();
+        $sprites = $(this).find('.sprite');
+        if ($sprites.length){
+            $('.cell[data-col][data-row]', $pallet).removeClass('active');
+            $(this).addClass('active');
+            }
+        });
 
-    $('.cell[data-col][data-row]', $grid).bind('click', function(e){
+    // Define the click events for CANVAS CELLS
+    $('.cell[data-col][data-row]', $canvas).bind('click', function(e){
         e.preventDefault();
         var $cell = $(this);
         var edit = $map.attr('data-edit');
@@ -60,15 +83,14 @@ $(document).ready(function(){
         else if (edit === 'battles'){ changeCellBattle($cell); }
         else if (edit === 'fields'){ changeCellField($cell); }
         else { return false; }
-    });
+        });
 
+    // Automatically export the map on init
     exportMap();
-
-    //console.log('mapOptions = ', mapOptions);
-    //console.log('----------');
 
 });
 
+// Define a function for shifting all canvas sprites in a direction
 function shiftSprites(dir){
     console.log('shiftSprites('+dir+')');
     if (dir === 'left'){ return shiftSpritesLeft(); }
@@ -77,6 +99,7 @@ function shiftSprites(dir){
     else if (dir === 'down'){ return shiftSpritesDown(); }
 }
 
+// Define a function for shifting all canvas sprites left
 function shiftSpritesLeft(){
     if (!canShiftMap('left')){ return false; }
     var start = 2;
@@ -87,13 +110,15 @@ function shiftSpritesLeft(){
         $sprites.each(function(){
             var $sprite = $(this);
             var row = parseInt($sprite.closest('.cell').attr('data-row'));
-            var $newCell = $('.cell[data-col="'+newCol+'"][data-row="'+row+'"]', $grid);
+            var $newCell = $('.cell[data-col="'+newCol+'"][data-row="'+row+'"]', $canvas);
             $sprite.appendTo($newCell);
             });
     }
     queueExportMap();
     return true;
 }
+
+// Define a function for shifting all canvas sprites right
 function shiftSpritesRight(){
     if (!canShiftMap('right')){ return false; }
     var start = gridSize.cols - 1;
@@ -104,13 +129,15 @@ function shiftSpritesRight(){
         $sprites.each(function(){
             var $sprite = $(this);
             var row = parseInt($sprite.closest('.cell').attr('data-row'));
-            var $newCell = $('.cell[data-col="'+newCol+'"][data-row="'+row+'"]', $grid);
+            var $newCell = $('.cell[data-col="'+newCol+'"][data-row="'+row+'"]', $canvas);
             $sprite.appendTo($newCell);
             });
     }
     queueExportMap();
     return true;
 }
+
+// Define a function for shifting all canvas sprites up
 function shiftSpritesUp(){
     if (!canShiftMap('up')){ return false; }
     var start = 2;
@@ -121,13 +148,15 @@ function shiftSpritesUp(){
         $sprites.each(function(){
             var $sprite = $(this);
             var col = parseInt($sprite.closest('.cell').attr('data-col'));
-            var $newCell = $('.cell[data-col="'+col+'"][data-row="'+newRow+'"]', $grid);
+            var $newCell = $('.cell[data-col="'+col+'"][data-row="'+newRow+'"]', $canvas);
             $sprite.appendTo($newCell);
             });
     }
     queueExportMap();
     return true;
 }
+
+// Define a function for shifting all canvas sprites down
 function shiftSpritesDown(){
     if (!canShiftMap('down')){ return false; }
     var start = gridSize.rows - 1;
@@ -138,7 +167,7 @@ function shiftSpritesDown(){
         $sprites.each(function(){
             var $sprite = $(this);
             var col = parseInt($sprite.closest('.cell').attr('data-col'));
-            var $newCell = $('.cell[data-col="'+col+'"][data-row="'+newRow+'"]', $grid);
+            var $newCell = $('.cell[data-col="'+col+'"][data-row="'+newRow+'"]', $canvas);
             $sprite.appendTo($newCell);
             });
     }
@@ -146,21 +175,29 @@ function shiftSpritesDown(){
     return true;
 }
 
+// Define a function for collecting all canvas cells in a column
 function getCellsByCol(col){
-    return $('.cell[data-col="'+col+'"]', $grid);
+    return $('.cell[data-col="'+col+'"]', $canvas);
 }
+
+// Define a function for collecting all canvas cell sprites in a column
 function getCellSpritesByCol(col){
     var $cells = getCellsByCol(col);
     return $cells.find('.sprite');
 }
+
+// Define a function for collecting all canvas cells in a row
 function getCellsByRow(row){
-    return $('.cell[data-row="'+row+'"]', $grid);
+    return $('.cell[data-row="'+row+'"]', $canvas);
 }
+
+// Define a function for collecting all canvas cell sprites in a row
 function getCellSpritesByRow(row){
     var $cells = getCellsByRow(row);
     return $cells.find('.sprite');
 }
 
+// Define a function for checking if map can shift in a direction
 function canShiftMap(dir){
     if (dir === 'left'){ return canShiftMapLeft(); }
     else if (dir === 'right'){ return canShiftMapRight(); }
@@ -168,18 +205,26 @@ function canShiftMap(dir){
     else if (dir === 'down'){ return canShiftMapDown(); }
     else { return false; }
 }
+
+// Define a function for checking if the map can be shifted left
 function canShiftMapLeft(){
     var $sprites = getCellSpritesByCol(1);
     return $sprites.length ? false : true;
 }
+
+// Define a function for checking if the map can be shifted right
 function canShiftMapRight(){
     var $sprites = getCellSpritesByCol(gridSize.cols);
     return $sprites.length ? false : true;
 }
+
+// Define a function for checking if the map can be shifted up
 function canShiftMapUp(){
     var $sprites = getCellSpritesByRow(1);
     return $sprites.length ? false : true;
 }
+
+// Define a function for checking if the map can be shifted down
 function canShiftMapDown(){
     var $sprites = getCellSpritesByRow(gridSize.rows);
     return $sprites.length ? false : true;
@@ -272,7 +317,6 @@ function changeCellBattle($cell, newPath){
 
 }
 
-
 // Define a function for editing cell's field to something else
 function changeCellField($cell, newPath){
 
@@ -316,7 +360,7 @@ function exportMap(){
 
     var mapPaths = [];
     var mapBattles = [];
-    $('.cell[data-col][data-row]', $grid).each(function(index){
+    $('.cell[data-col][data-row]', $canvas).each(function(index){
 
         var $cell = $(this);
         var col = parseInt($cell.attr('data-col'));
@@ -331,13 +375,13 @@ function exportMap(){
 
         if ($path.length){
             var pathToken = $path.attr('data-path');
-            mapPaths.push('$map_paths['+col+']['+row+'] = \''+pathToken+'\';');
+            mapPaths.push('$map_canvas_paths['+col+']['+row+'] = \''+pathToken+'\';');
             }
 
         if ($battle.length && $field.length){
             var battleToken = $battle.attr('data-battle');
             var fieldToken = $field.attr('data-field');
-            mapBattles.push('$map_battles['+col+']['+row+'] = \''+battleToken+'/'+fieldToken+'\';');
+            mapBattles.push('$map_canvas_battles['+col+']['+row+'] = \''+battleToken+'/'+fieldToken+'\';');
             }
 
         });

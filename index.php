@@ -4,25 +4,27 @@
 require('includes/config.php');
 
 // Require the path, battle, and field data index file
-require('includes/options.php');
 require('includes/functions.php');
+require('includes/options.php');
 
-// Define the arrays for paths and battles for the map
-$map_offset = array(0, 0);
-$map_paths = array();
-$map_battles = array();
-
-// Define the max rows and cols
-$canvas_cols = 22;
-$canvas_rows = 16;
+// Collect request data from the headers
+$this_map_id = !empty($_GET['map']) && is_numeric($_GET['map']) ? $_GET['map'] : 0;
 
 // Define properties for the pallet
-$pallet_rows = 2;
+$map_pallet_cols = 22;
+$map_pallet_rows = 2;
+
+// Define the max rows and cols
+$map_canvas_cols = 22;
+$map_canvas_rows = 16;
 
 // Include map layout data from the appropriate grid file
-$map_num = !empty($_GET['map']) && is_numeric($_GET['map']) ? $_GET['map'] : 0;
-if (!file_exists('maps/map'.$map_num.'.php')){ $map_num = 0; }
-if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
+$map_canvas_paths = array();
+$map_canvas_battles = array();
+if (file_exists('maps/map'.$this_map_id.'.php')){
+    $canvas_data_file = 'maps/map'.$this_map_id.'.php';
+    require($canvas_data_file);
+}
 
 ?>
 <!DOCTYPE html>
@@ -54,8 +56,43 @@ if ($map_num !== 0){ include('maps/map'.$map_num.'.php'); }
 
     <div class="map" data-view="all" data-edit="">
         <div class="wrapper">
-            <?= generate_map_grid($canvas_cols, $pallet_rows, 'pallet') ?>
-            <?= generate_map_grid($canvas_cols, $canvas_rows, 'canvas', array('paths' => $map_paths, 'battles' => $map_battles)) ?>
+            <?
+
+            // Print out an empty pallet as a view-all placeholder
+            $grid_class = 'pallet none';
+            echo generate_map_grid($map_pallet_cols, $map_pallet_rows, $grid_class);
+
+            // Loop through the different option types to create pallets
+            foreach ($map_options AS $option_kind => $option_list){
+
+                // Define the objects that should appear on the map
+                $key = 0;
+                $pallet_sprites = array();
+                for ($row = 1; $row <= $map_pallet_rows; $row++){
+                    for ($col = 1; $col <= $map_pallet_cols; $col++){
+                        if (!isset($option_list[$key])){ break 2; }
+                        $path = $option_list[$key];
+                        $pallet_sprites[$col][$row] = $path;
+                        $key++;
+                    }
+                }
+
+                // Print out the sprite pallet for this option kind
+                $grid_class = 'pallet '.$option_kind;
+                echo generate_map_grid($map_pallet_cols, $map_pallet_rows, $grid_class, array(
+                    $option_kind => $pallet_sprites
+                    ));
+
+            }
+
+            // Print out the canvas with the actual map grid's sprites, if any
+            $grid_class = 'canvas';
+            echo generate_map_grid($map_canvas_cols, $map_canvas_rows, $grid_class, array(
+                'paths' => $map_canvas_paths,
+                'battles' => $map_canvas_battles
+                ));
+
+            ?>
         </div>
     </div>
 
