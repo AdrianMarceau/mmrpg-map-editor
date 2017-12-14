@@ -8,4 +8,4 @@ A few pre-made maps for the editor can be viewed here:
 - [Map 2](http://rpg.megamanpoweredup.net/_developer/mapeditor2k17/?map=2)
 - [Map 3](http://rpg.megamanpoweredup.net/_developer/mapeditor2k17/?map=3)
 - [Map 4](http://rpg.megamanpoweredup.net/_developer/mapeditor2k17/?map=4)
-- [Map 4](http://rpg.megamanpoweredup.net/_developer/mapeditor2k17/?map=5)
+- [Map 5](http://rpg.megamanpoweredup.net/_developer/mapeditor2k17/?map=5)
