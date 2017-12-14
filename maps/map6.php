@@ -1,0 +1,80 @@
+<?php
+
+// Define the paths that should appear on the map (x47)
+$map_canvas_paths[6][2] = 't-stub';
+$map_canvas_paths[5][3] = 'l-stub';
+$map_canvas_paths[6][3] = 'cross';
+$map_canvas_paths[7][3] = 'r-stub';
+$map_canvas_paths[6][4] = 'v-line';
+$map_canvas_paths[3][5] = 'tl-joint';
+$map_canvas_paths[4][5] = 'h-line';
+$map_canvas_paths[5][5] = 'h-line';
+$map_canvas_paths[6][5] = 'cross';
+$map_canvas_paths[7][5] = 'h-line';
+$map_canvas_paths[8][5] = 'h-line';
+$map_canvas_paths[9][5] = 'tr-joint';
+$map_canvas_paths[2][6] = 'tl-joint';
+$map_canvas_paths[3][6] = 'br-joint';
+$map_canvas_paths[6][6] = 'v-line';
+$map_canvas_paths[9][6] = 'bl-joint';
+$map_canvas_paths[10][6] = 'tr-joint';
+$map_canvas_paths[2][7] = 'v-line';
+$map_canvas_paths[6][7] = 'v-line';
+$map_canvas_paths[10][7] = 'v-line';
+$map_canvas_paths[2][8] = 'l-tee';
+$map_canvas_paths[3][8] = 'h-line';
+$map_canvas_paths[4][8] = 'h-line';
+$map_canvas_paths[5][8] = 'h-line';
+$map_canvas_paths[6][8] = 'cross';
+$map_canvas_paths[7][8] = 'h-line';
+$map_canvas_paths[8][8] = 'h-line';
+$map_canvas_paths[9][8] = 'h-line';
+$map_canvas_paths[10][8] = 'r-tee';
+$map_canvas_paths[2][9] = 'v-line';
+$map_canvas_paths[6][9] = 'v-line';
+$map_canvas_paths[10][9] = 'v-line';
+$map_canvas_paths[2][10] = 'bl-joint';
+$map_canvas_paths[3][10] = 'tr-joint';
+$map_canvas_paths[6][10] = 'v-line';
+$map_canvas_paths[9][10] = 'tl-joint';
+$map_canvas_paths[10][10] = 'br-joint';
+$map_canvas_paths[3][11] = 'bl-joint';
+$map_canvas_paths[4][11] = 'h-line';
+$map_canvas_paths[5][11] = 'h-line';
+$map_canvas_paths[6][11] = 'cross';
+$map_canvas_paths[7][11] = 'h-line';
+$map_canvas_paths[8][11] = 'h-line';
+$map_canvas_paths[9][11] = 'br-joint';
+$map_canvas_paths[6][12] = 'v-line';
+$map_canvas_paths[6][13] = 'v-line';
+$map_canvas_paths[6][14] = 'b-stub';
+
+// Define the battles that should appear on the map (x26)
+$map_canvas_battles[6][3] = 'boss/final-destination-3';
+$map_canvas_battles[6][4] = 'mecha/final-destination-3';
+$map_canvas_battles[3][5] = 'mecha/oil-wells';
+$map_canvas_battles[4][5] = 'master/oil-wells';
+$map_canvas_battles[8][5] = 'master/clock-citadel';
+$map_canvas_battles[9][5] = 'mecha/clock-citadel';
+$map_canvas_battles[3][6] = 'mecha/oil-wells';
+$map_canvas_battles[6][6] = 'mecha/steel-mill';
+$map_canvas_battles[9][6] = 'mecha/clock-citadel';
+$map_canvas_battles[6][7] = 'master/steel-mill';
+$map_canvas_battles[3][8] = 'mecha/electrical-tower';
+$map_canvas_battles[4][8] = 'mecha/electrical-tower';
+$map_canvas_battles[5][8] = 'master/electrical-tower';
+$map_canvas_battles[7][8] = 'master/orb-city';
+$map_canvas_battles[8][8] = 'mecha/orb-city';
+$map_canvas_battles[9][8] = 'mecha/orb-city';
+$map_canvas_battles[6][9] = 'master/arctic-jungle';
+$map_canvas_battles[3][10] = 'master/abandoned-warehouse';
+$map_canvas_battles[6][10] = 'mecha/arctic-jungle';
+$map_canvas_battles[9][10] = 'master/mountain-mines';
+$map_canvas_battles[3][11] = 'mecha/abandoned-warehouse';
+$map_canvas_battles[4][11] = 'mecha/abandoned-warehouse';
+$map_canvas_battles[8][11] = 'mecha/mountain-mines';
+$map_canvas_battles[9][11] = 'mecha/mountain-mines';
+$map_canvas_battles[6][12] = 'master/intro-field';
+$map_canvas_battles[6][13] = 'mecha/intro-field';
+
+?>
