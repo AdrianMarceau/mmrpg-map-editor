@@ -37,19 +37,19 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
 
     <div class="controls">
 
+        <div class="views">
+            <a class="button all active" data-view="all">View All</a>
+            <a class="button paths" data-view="paths">Edit Paths</a>
+            <a class="button battles" data-view="battles">Edit Battles</a>
+            <a class="button fields" data-view="fields">Edit Fields</a>
+        </div>
+
         <div class="shift">
             <span class="label">Shift</span>
             <a class="button left" data-dir="left">Left</a>
             <a class="button right" data-dir="right">Right</a>
             <a class="button up" data-dir="up">Up</a>
             <a class="button down" data-dir="down">Down</a>
-        </div>
-
-        <div class="views">
-            <a class="button all active" data-view="all">View All</a>
-            <a class="button paths" data-view="paths">Edit Paths</a>
-            <a class="button battles" data-view="battles">Edit Battles</a>
-            <a class="button fields" data-view="fields">Edit Fields</a>
         </div>
 
     </div>

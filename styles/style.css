@@ -204,20 +204,20 @@ body {
     clear: both;
     height: 0;
 }
-.controls .shift,
-.controls .views {
+.controls .views,
+.controls .shift {
 
 }
-.controls .shift {
+.controls .views {
     float: left;
     text-align: left;
 }
-.controls .views {
+.controls .shift {
     float: right;
     text-align: right;
 }
-.controls .shift .label,
-.controls .views .label {
+.controls .views .label,
+.controls .shift .label {
     display: inline-block;
     border: 1px solid #101010;
     background-color: #101010;
@@ -229,8 +229,8 @@ body {
     font-size: 12px;
     line-height: 1;
 }
-.controls .shift .button,
-.controls .views .button {
+.controls .views .button,
+.controls .shift .button {
     display: inline-block;
     border: 1px solid #262626;
     background-color: #1a1a1a;
@@ -243,16 +243,16 @@ body {
     line-height: 1;
     cursor: pointer;
 }
-.controls .shift .button:hover,
 .controls .views .button:hover,
-.controls .views .button.active {
+.controls .views .button.active,
+.controls .shift .button:hover {
   color: #DEDEDE;
-}
-.controls .shift .button {
-    margin-right: 5px;
 }
 .controls .views .button {
     min-width: 75px;
+    margin-right: 5px;
+}
+.controls .shift .button {
     margin-left: 5px;
 }
 
