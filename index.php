@@ -81,7 +81,7 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
                 $grid_class = 'pallet '.$option_kind;
                 echo generate_map_grid($map_pallet_cols, $map_pallet_rows, $grid_class, array(
                     $option_kind => $pallet_sprites
-                    ));
+                    ), $option_kind);
 
             }
 

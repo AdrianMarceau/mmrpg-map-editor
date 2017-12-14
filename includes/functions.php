@@ -1,7 +1,7 @@
 <?php
 
 // Define a function that generates a table-based map grid with sprites if provided
-function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites = array()){
+function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites = array(), $option_kind = ''){
 
     // Pull in global option indexes
     global $map_options;
@@ -19,7 +19,7 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
     // Generate markup for this map grid with any sprite data
     ob_start();
     ?>
-    <table class="grid <?= $grid_class ?>" data-cols="<?= $num_cols ?>" data-rows="<?= $num_rows ?>" style="width: <?= $map_grid_width.'px' ?>;">
+    <table class="grid <?= $grid_class ?>" data-cols="<?= $num_cols ?>" data-rows="<?= $num_rows ?>" <?= !empty($option_kind) ? 'data-kind="'.$option_kind.'"' : '' ?> style="width: <?= $map_grid_width.'px' ?>;">
         <tbody>
             <?
             for ($row = 1; $row <= $num_rows; $row++){
