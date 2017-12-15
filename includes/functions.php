@@ -92,4 +92,50 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
 
 }
 
+// Method: POST, PUT, GET etc
+// Data: array("param" => "value") ==> index.php?param=value
+// via https://stackoverflow.com/a/9802854/1876397
+function call_api($url, $data = false, $method = 'post'){
+    $curl = curl_init();
+    switch ($method){
+        case "POST": {
+            curl_setopt($curl, CURLOPT_POST, 1);
+            if ($data){ curl_setopt($curl, CURLOPT_POSTFIELDS, $data); }
+            break;
+        }
+        case "PUT": {
+            curl_setopt($curl, CURLOPT_PUT, 1);
+            break;
+        }
+        default:{
+            if ($data){ $url = sprintf("%s?%s", $url, http_build_query($data)); }
+            break;
+        }
+    }
+    //curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); //optional
+    //curl_setopt($curl, CURLOPT_USERPWD, "username:password"); //optional
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $result = curl_exec($curl);
+    curl_close($curl);
+    return $result;
+}
+
+// Define a function for calling an API and returning JSON data
+function call_json_api($url, $data = false, $method = 'post'){
+    $api_data = call_api($url, $data, $method);
+    if (empty($api_data)){ return false; }
+    if (substr($api_data, 0, 1) === '{'){ $json_data = json_decode($api_data, true); }
+    else { $json_data = array('response' => $api_data); }
+    return $json_data;
+}
+
+// Define a function for getting a specific field from a JSON api
+function get_json_api_field($url, $field, $data = false, $method = 'post'){
+    $json_data = call_json_api($url, $data, $method);
+    if (empty($json_data) || !isset($json_data[$field])){ return false; }
+    return $json_data[$field];
+
+}
+
 ?>
