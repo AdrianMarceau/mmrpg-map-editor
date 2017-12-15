@@ -1,10 +1,9 @@
 <?php
 
-// Require the config file for paths
-require('includes/config.php');
+// Require the global top file
+require('top.php');
 
-// Require the path, battle, and field data index file
-require('includes/functions.php');
+// Require the path, battle, and field sprite options
 require('includes/options.php');
 
 // Collect request data from the headers
