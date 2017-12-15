@@ -18,12 +18,9 @@ $battle_options = array_merge($battle_options, array('mecha', 'master', 'boss'))
 $map_options['battles'] = $battle_options;
 
 // Define the different field tokens available for battles
-$field_options = array();
-$field_options = array_merge($field_options, array('intro-field', 'prototype-subspace'));
-$field_options = array_merge($field_options, array('light-laboratory', 'wily-castle', 'cossack-citadel'));
-$field_options = array_merge($field_options, array('abandoned-warehouse', 'orb-city', 'mountain-mines', 'steel-mill', 'oil-wells', 'arctic-jungle', 'clock-citadel', 'electrical-tower'));
-$field_options = array_merge($field_options, array('final-destination', 'final-destination-2', 'final-destination-3'));
-$field_options = array_merge($field_options, array('prototype-complete'));
+$api_field_tokens = get_json_api_field(MMRPG_BASE_ASSET_HREF.'api/database/get_fields.php', 'field_tokens');
+if (!empty($api_field_tokens)){ $field_options = $api_field_tokens; }
+else { $field_options = array('intro-field'); }
 $map_options['fields'] = $field_options;
 
 
