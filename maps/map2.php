@@ -33,15 +33,15 @@ $map_canvas_paths[9][6] = 'h-line';
 $map_canvas_paths[10][6] = 'h-line';
 $map_canvas_paths[11][6] = 'br-joint';
 
-// Define the battles that should appear on the map (x9)
-$map_canvas_battles[9][2] = 'master/wily-castle';
-$map_canvas_battles[7][3] = 'mecha/wily-castle';
-$map_canvas_battles[3][4] = 'mecha/intro-field';
-$map_canvas_battles[5][4] = 'mecha/intro-field';
-$map_canvas_battles[8][4] = 'mecha/light-laboratory';
-$map_canvas_battles[10][4] = 'master/light-laboratory';
-$map_canvas_battles[13][4] = 'boss/prototype-subspace';
-$map_canvas_battles[7][5] = 'mecha/cossack-citadel';
-$map_canvas_battles[9][6] = 'master/wily-castle';
+// Define the events that should appear on the map (x9)
+$map_canvas_events[9][2] = 'battle-master/wily-castle';
+$map_canvas_events[7][3] = 'battle-mecha/wily-castle';
+$map_canvas_events[3][4] = 'battle-mecha/intro-field';
+$map_canvas_events[5][4] = 'battle-mecha/intro-field';
+$map_canvas_events[8][4] = 'battle-mecha/light-laboratory';
+$map_canvas_events[10][4] = 'battle-master/light-laboratory';
+$map_canvas_events[13][4] = 'battle-boss/prototype-subspace';
+$map_canvas_events[7][5] = 'battle-mecha/cossack-citadel';
+$map_canvas_events[9][6] = 'battle-master/wily-castle';
 
 ?>

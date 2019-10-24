@@ -3,7 +3,7 @@
 // Require the global top file
 require('top.php');
 
-// Require the path, battle, and field sprite options
+// Require the path, event, and field sprite options
 require('includes/options.php');
 
 // Collect request data from the headers
@@ -19,7 +19,7 @@ $map_canvas_rows = 16;
 
 // Include map layout data from the appropriate grid file
 $map_canvas_paths = array();
-$map_canvas_battles = array();
+$map_canvas_events = array();
 if (file_exists('maps/map'.$this_map_id.'.php')){
     $canvas_data_file = 'maps/map'.$this_map_id.'.php';
     require($canvas_data_file);
@@ -40,7 +40,7 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
         <div class="views">
             <a class="button all active" data-view="all">View All</a>
             <a class="button paths" data-view="paths">Edit Paths</a>
-            <a class="button battles" data-view="battles">Edit Battles</a>
+            <a class="button events" data-view="events">Edit Events</a>
             <a class="button fields" data-view="fields">Edit Fields</a>
             <a class="button test" data-view="test">Test</a>
         </div>
@@ -90,7 +90,7 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
             $grid_class = 'canvas';
             echo generate_map_grid($map_canvas_cols, $map_canvas_rows, $grid_class, array(
                 'paths' => $map_canvas_paths,
-                'battles' => $map_canvas_battles
+                'events' => $map_canvas_events
                 ));
 
             ?>

@@ -56,27 +56,27 @@ $map_canvas_paths[9][11] = 'v-line';
 $map_canvas_paths[5][12] = 'b-stub';
 $map_canvas_paths[9][12] = 'b-stub';
 
-// Define the battles that should appear on the map (x21)
-$map_canvas_battles[14][3] = 'boss/intro-field';
-$map_canvas_battles[7][5] = 'mecha/abandoned-warehouse';
-$map_canvas_battles[8][5] = 'mecha/abandoned-warehouse';
-$map_canvas_battles[9][5] = 'master/abandoned-warehouse';
-$map_canvas_battles[12][6] = 'master/intro-field';
-$map_canvas_battles[13][6] = 'mecha/intro-field';
-$map_canvas_battles[15][6] = 'mecha/intro-field';
-$map_canvas_battles[16][6] = 'master/intro-field';
-$map_canvas_battles[2][7] = 'master/orb-city';
-$map_canvas_battles[3][7] = 'mecha/orb-city';
-$map_canvas_battles[4][7] = 'mecha/orb-city';
-$map_canvas_battles[12][8] = 'master/intro-field';
-$map_canvas_battles[13][8] = 'mecha/intro-field';
-$map_canvas_battles[15][8] = 'mecha/intro-field';
-$map_canvas_battles[16][8] = 'master/intro-field';
-$map_canvas_battles[5][10] = 'mecha/mountain-mines';
-$map_canvas_battles[9][10] = 'mecha/steel-mill';
-$map_canvas_battles[5][11] = 'mecha/mountain-mines';
-$map_canvas_battles[9][11] = 'mecha/steel-mill';
-$map_canvas_battles[5][12] = 'master/mountain-mines';
-$map_canvas_battles[9][12] = 'master/steel-mill';
+// Define the events that should appear on the map (x21)
+$map_canvas_events[14][3] = 'battle-boss/intro-field';
+$map_canvas_events[7][5] = 'battle-mecha/abandoned-warehouse';
+$map_canvas_events[8][5] = 'battle-mecha/abandoned-warehouse';
+$map_canvas_events[9][5] = 'battle-master/abandoned-warehouse';
+$map_canvas_events[12][6] = 'battle-master/intro-field';
+$map_canvas_events[13][6] = 'battle-mecha/intro-field';
+$map_canvas_events[15][6] = 'battle-mecha/intro-field';
+$map_canvas_events[16][6] = 'battle-master/intro-field';
+$map_canvas_events[2][7] = 'battle-master/orb-city';
+$map_canvas_events[3][7] = 'battle-mecha/orb-city';
+$map_canvas_events[4][7] = 'battle-mecha/orb-city';
+$map_canvas_events[12][8] = 'battle-master/intro-field';
+$map_canvas_events[13][8] = 'battle-mecha/intro-field';
+$map_canvas_events[15][8] = 'battle-mecha/intro-field';
+$map_canvas_events[16][8] = 'battle-master/intro-field';
+$map_canvas_events[5][10] = 'battle-mecha/mountain-mines';
+$map_canvas_events[9][10] = 'battle-mecha/steel-mill';
+$map_canvas_events[5][11] = 'battle-mecha/mountain-mines';
+$map_canvas_events[9][11] = 'battle-mecha/steel-mill';
+$map_canvas_events[5][12] = 'battle-master/mountain-mines';
+$map_canvas_events[9][12] = 'battle-master/steel-mill';
 
 ?>

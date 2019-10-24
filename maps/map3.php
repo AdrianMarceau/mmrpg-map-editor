@@ -63,31 +63,31 @@ $map_canvas_paths[13][8] = 'h-line';
 $map_canvas_paths[14][8] = 'h-line';
 $map_canvas_paths[15][8] = 'br-joint';
 
-// Define the battles that should appear on the map (x25)
-$map_canvas_battles[3][2] = 'mecha/abandoned-warehouse';
-$map_canvas_battles[5][2] = 'mecha/abandoned-warehouse';
-$map_canvas_battles[7][2] = 'master/abandoned-warehouse';
-$map_canvas_battles[11][2] = 'master/mountain-mines';
-$map_canvas_battles[13][2] = 'mecha/steel-mill';
-$map_canvas_battles[18][3] = 'boss/wily-castle';
-$map_canvas_battles[5][4] = 'mecha/orb-city';
-$map_canvas_battles[7][4] = 'mecha/orb-city';
-$map_canvas_battles[11][4] = 'mecha/mountain-mines';
-$map_canvas_battles[13][4] = 'master/steel-mill';
-$map_canvas_battles[15][4] = 'mecha/oil-wells';
-$map_canvas_battles[3][6] = 'master/electrical-tower';
-$map_canvas_battles[7][6] = 'master/orb-city';
-$map_canvas_battles[11][6] = 'mecha/mountain-mines';
-$map_canvas_battles[13][6] = 'mecha/steel-mill';
-$map_canvas_battles[15][6] = 'mecha/oil-wells';
-$map_canvas_battles[18][6] = 'master/clock-citadel';
-$map_canvas_battles[19][6] = 'mecha/clock-citadel';
-$map_canvas_battles[3][7] = 'mecha/electrical-tower';
-$map_canvas_battles[18][7] = 'mecha/clock-citadel';
-$map_canvas_battles[3][8] = 'mecha/electrical-tower';
-$map_canvas_battles[7][8] = 'mecha/arctic-jungle';
-$map_canvas_battles[9][8] = 'master/arctic-jungle';
-$map_canvas_battles[11][8] = 'mecha/arctic-jungle';
-$map_canvas_battles[15][8] = 'master/oil-wells';
+// Define the events that should appear on the map (x25)
+$map_canvas_events[3][2] = 'battle-mecha/abandoned-warehouse';
+$map_canvas_events[5][2] = 'battle-mecha/abandoned-warehouse';
+$map_canvas_events[7][2] = 'battle-master/abandoned-warehouse';
+$map_canvas_events[11][2] = 'battle-master/mountain-mines';
+$map_canvas_events[13][2] = 'battle-mecha/steel-mill';
+$map_canvas_events[18][3] = 'battle-boss/wily-castle';
+$map_canvas_events[5][4] = 'battle-mecha/orb-city';
+$map_canvas_events[7][4] = 'battle-mecha/orb-city';
+$map_canvas_events[11][4] = 'battle-mecha/mountain-mines';
+$map_canvas_events[13][4] = 'battle-master/steel-mill';
+$map_canvas_events[15][4] = 'battle-mecha/oil-wells';
+$map_canvas_events[3][6] = 'battle-master/electrical-tower';
+$map_canvas_events[7][6] = 'battle-master/orb-city';
+$map_canvas_events[11][6] = 'battle-mecha/mountain-mines';
+$map_canvas_events[13][6] = 'battle-mecha/steel-mill';
+$map_canvas_events[15][6] = 'battle-mecha/oil-wells';
+$map_canvas_events[18][6] = 'battle-master/clock-citadel';
+$map_canvas_events[19][6] = 'battle-mecha/clock-citadel';
+$map_canvas_events[3][7] = 'battle-mecha/electrical-tower';
+$map_canvas_events[18][7] = 'battle-mecha/clock-citadel';
+$map_canvas_events[3][8] = 'battle-mecha/electrical-tower';
+$map_canvas_events[7][8] = 'battle-mecha/arctic-jungle';
+$map_canvas_events[9][8] = 'battle-master/arctic-jungle';
+$map_canvas_events[11][8] = 'battle-mecha/arctic-jungle';
+$map_canvas_events[15][8] = 'battle-master/oil-wells';
 
 ?>

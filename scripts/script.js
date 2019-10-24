@@ -99,9 +99,9 @@ $(document).ready(function(){
             // Update the current pallet selection in the global settings array
             var token = $sprites.filter('[data-'+kind2+']').attr('data-'+kind2);
             palletCurrent[kind] = token;
-            // If this is a field change, automatically update anything the battle pallet
+            // If this is a field change, automatically update anything the event pallet
             if (kind === 'fields'){
-                $pallet.filter('[data-kind="battles"]').find('.sprite.battle').each(function(index){
+                $pallet.filter('[data-kind="events"]').find('.sprite.event').each(function(index){
                     var $sprite = $(this);
                     var $cell = $sprite.closest('.cell');
                     changeCellField($cell, token, false);
@@ -116,7 +116,7 @@ $(document).ready(function(){
         var $cell = $(this);
         var edit = $map.attr('data-edit');
         if (edit === 'paths'){ changeCellPath($cell); }
-        else if (edit === 'battles'){ changeCellBattle($cell); }
+        else if (edit === 'events'){ changeCellEvent($cell); }
         else if (edit === 'fields'){ changeCellField($cell); }
         else { return false; }
         });
@@ -288,30 +288,30 @@ function changeCellPath($cell, newPath, exportMap){
 
 }
 
-// Define a function for editing cell's battle to something else
-function changeCellBattle($cell, newBattle, exportMap){
+// Define a function for editing cell's event to something else
+function changeCellEvent($cell, newEvent, exportMap){
 
     // Compensate for missing function arguments or break if required
     if (typeof $cell !== 'object'){ return false; }
-    if (typeof newBattle !== 'string'){ newBattle = ''; }
+    if (typeof newEvent !== 'string'){ newEvent = ''; }
     if (typeof exportMap !== 'boolean'){ exportMap = true; }
 
-    // Insert a new battle sprite, unless one already exists then remove it
-    var $battle = $cell.find('.battle[data-battle]');
+    // Insert a new event sprite, unless one already exists then remove it
+    var $event = $cell.find('.event[data-event]');
     var $field = $cell.find('.field[data-field]');
-    var currBattle = $battle.length ? $battle.attr('data-battle') : '';
+    var currEvent = $event.length ? $event.attr('data-event') : '';
     var newField = palletCurrent['fields'];
     var newFieldData = typeof mmrpgFieldIndex[newField] !== 'undefined' ? mmrpgFieldIndex[newField] : {};
     var newFieldType = typeof newFieldData.type !== 'undefined' && newFieldData.type.length > 0 ? newFieldData.type : 'none';
-    var newBattle = newBattle.length ? newBattle : palletCurrent['battles'];
-    if ($battle.length){ $battle.remove(); }
+    var newEvent = newEvent.length ? newEvent : palletCurrent['events'];
+    if ($event.length){ $event.remove(); }
     if ($field.length){ $field.remove(); }
-    if (!(currBattle.length && currBattle === newBattle)){
+    if (!(currEvent.length && currEvent === newEvent)){
         var fieldImage = baseAssetHref+'images/fields/'+newField+'/battle-field_avatar.png';
-        $field = $('<img class="sprite field '+newBattle+' '+newField+'" data-field="'+newField+'" data-type="'+newFieldType+'" src="'+fieldImage+'" />');
+        $field = $('<img class="sprite field '+newEvent+' '+newField+'" data-field="'+newField+'" data-type="'+newFieldType+'" src="'+fieldImage+'" />');
         $field.appendTo($cell);
-        $battle = $('<div class="sprite battle '+newBattle+'" data-battle="'+newBattle+'" data-type="'+newFieldType+'"></div>');
-        $battle.appendTo($cell);
+        $event = $('<div class="sprite event '+newEvent+'" data-event="'+newEvent+'" data-type="'+newFieldType+'"></div>');
+        $event.appendTo($cell);
         }
 
     // Queue up an update if any changes have been mode
@@ -329,21 +329,21 @@ function changeCellField($cell, newField, exportMap){
     if (typeof exportMap !== 'boolean'){ exportMap = true; }
 
     // Replace the previous field sprite if one exists, else do nothing
-    var $battle = $cell.find('.battle[data-battle]');
+    var $event = $cell.find('.event[data-event]');
     var $field = $cell.find('.field[data-field]');
-    if ($battle.length && $field.length){
+    if ($event.length && $field.length){
 
         // Remove the previous field and prepend a new one
         $field.remove();
-        var battleToken = $battle.attr('data-battle');
+        var eventToken = $event.attr('data-event');
         var fieldToken = newField.length ? newField : palletCurrent['fields'];
         var fieldData = typeof mmrpgFieldIndex[fieldToken] !== 'undefined' ? mmrpgFieldIndex[fieldToken] : {};
         var fieldImage = baseAssetHref+'images/fields/'+fieldToken+'/battle-field_avatar.png';
         var fieldType = typeof fieldData.type !== 'undefined' && fieldData.type.length > 0 ? fieldData.type : 'none';
         console.log('fieldType = ', fieldType);
-        $field = $('<img class="sprite field '+battleToken+' '+fieldToken+'" data-field="'+fieldToken+'" data-type="'+fieldType+'" src="'+fieldImage+'" />');
-        $field.insertBefore($battle);
-        $battle.attr('data-type', fieldType);
+        $field = $('<img class="sprite field '+eventToken+' '+fieldToken+'" data-field="'+fieldToken+'" data-type="'+fieldType+'" src="'+fieldImage+'" />');
+        $field.insertBefore($event);
+        $event.attr('data-type', fieldType);
 
         // Update the tooltip title of the parent cell
         var col = parseInt($cell.attr('data-col'));
@@ -362,7 +362,7 @@ function changeCellField($cell, newField, exportMap){
 function exportMap(){
 
     var mapPaths = [];
-    var mapBattles = [];
+    var mapEvents = [];
     $('.cell[data-col][data-row]', $canvas).each(function(index){
 
         var $cell = $(this);
@@ -371,7 +371,7 @@ function exportMap(){
         var name = col+'-'+row;
 
         var $path = $('.path[data-path]', $cell);
-        var $battle = $('.battle[data-battle]', $cell);
+        var $event = $('.event[data-event]', $cell);
         var $field = $('.field[data-field]', $cell);
 
         if ($path.length){
@@ -379,10 +379,10 @@ function exportMap(){
             mapPaths.push('$map_canvas_paths['+col+']['+row+'] = \''+pathToken+'\';');
             }
 
-        if ($battle.length && $field.length){
-            var battleToken = $battle.attr('data-battle');
+        if ($event.length && $field.length){
+            var eventToken = $event.attr('data-event');
             var fieldToken = $field.attr('data-field');
-            mapBattles.push('$map_canvas_battles['+col+']['+row+'] = \''+battleToken+'/'+fieldToken+'\';');
+            mapEvents.push('$map_canvas_events['+col+']['+row+'] = \''+eventToken+'/'+fieldToken+'\';');
             }
 
         });
@@ -395,9 +395,9 @@ function exportMap(){
         exportString += mapPaths.join('\n');
         exportString += '\n\n';
         }
-    if (mapBattles.length){
-        exportString += '// Define the battles that should appear on the map (x'+mapBattles.length+') \n';
-        exportString += mapBattles.join('\n');
+    if (mapEvents.length){
+        exportString += '// Define the events that should appear on the map (x'+mapEvents.length+') \n';
+        exportString += mapEvents.join('\n');
         exportString += '\n\n';
         }
 

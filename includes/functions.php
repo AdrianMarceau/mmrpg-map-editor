@@ -11,7 +11,7 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
     // Compensate for missing sprite arrays
     if (!is_array($grid_sprites)){ $grid_sprites = array(); }
     if (!isset($grid_sprites['paths'])){ $grid_sprites['paths'] = array(); }
-    if (!isset($grid_sprites['battles'])){ $grid_sprites['battles'] = array(); }
+    if (!isset($grid_sprites['events'])){ $grid_sprites['events'] = array(); }
 
     // Calculate map width in pixels (with all cells + padding)
     $cell_width = 40;
@@ -43,14 +43,14 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
 
                     }
 
-                    // Generate markup for any battles that appear in this cell
-                    if (isset($grid_sprites['battles'][$col][$row])){
+                    // Generate markup for any events that appear in this cell
+                    if (isset($grid_sprites['events'][$col][$row])){
 
-                        $battle_data = $grid_sprites['battles'][$col][$row];
-                        $battle_data = strstr($battle_data, '/') ? explode('/', $battle_data) : array($battle_data);
+                        $event_data = $grid_sprites['events'][$col][$row];
+                        $event_data = strstr($event_data, '/') ? explode('/', $event_data) : array($event_data);
 
-                        $field_class = $battle_data[0];
-                        $field_token = isset($battle_data[1]) ? $battle_data[1] : $map_options['fields'][0];
+                        $field_class = $event_data[0];
+                        $field_token = isset($event_data[1]) ? $event_data[1] : $map_options['fields'][0];
                         if (!isset($api_field_index[$field_token])){ $field_token = 'intro-field'; }
                         $field_data = !empty($api_field_index[$field_token]) ? $api_field_index[$field_token] : array();
                         if (empty($field_data)){ continue; }
@@ -59,9 +59,9 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                         $cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'" src="'.$field_image.'" />';
                         $cell_title .= ' | '.$field_token;
 
-                        $battle_class = $battle_data[0];
-                        $battle_token = $battle_data[0];
-                        $cell_markup .= '<div class="sprite battle '.$battle_class.'" data-battle="'.$battle_token.'" data-type="'.$field_type.'"></div>';
+                        $event_class = $event_data[0];
+                        $event_token = $event_data[0];
+                        $cell_markup .= '<div class="sprite event '.$event_class.'" data-event="'.$event_token.'" data-type="'.$field_type.'"></div>';
 
                     }
 
@@ -71,7 +71,7 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                         $field_data = $grid_sprites['fields'][$col][$row];
                         $field_data = strstr($field_data, '/') ? explode('/', $field_data) : array($field_data);
 
-                        $field_class = 'boss';
+                        $field_class = 'battle-boss';
                         $field_token = $field_data[0];
                         if (!isset($api_field_index[$field_token])){ $field_token = 'intro-field'; }
                         $field_data = !empty($api_field_index[$field_token]) ? $api_field_index[$field_token] : array();

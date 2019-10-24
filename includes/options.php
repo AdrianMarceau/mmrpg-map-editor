@@ -14,10 +14,10 @@ $map_options['paths'] = $path_options;
 
 // Define the different kinds of events on the map
 $event_options = array();
-$event_options = array_merge($event_options, array('start', 'battle_mecha', 'battle_master', 'battle_boss'));
-$map_options['battles'] = $event_options;
+$event_options = array_merge($event_options, array('start', 'battle-mecha', 'battle-master', 'battle-boss'));
+$map_options['events'] = $event_options;
 
-// Define the different type tokens available for battles
+// Define the different type tokens available for events
 $api_type_index = get_json_api_data_field(MMRPG_BASE_ASSET_HREF.'api/v2/types/index', 'types');
 //die('<pre>$api_type_index = '.print_r($api_type_index, true).'</pre>');
 $api_type_tokens = array_keys($api_type_index);
@@ -26,7 +26,7 @@ if (!empty($api_type_tokens)){ $type_options = $api_type_tokens; }
 else { $type_options = array('intro-type'); }
 $map_options['types'] = $type_options;
 
-// Define the different field tokens available for battles
+// Define the different field tokens available for events
 $api_field_index = get_json_api_data_field(MMRPG_BASE_ASSET_HREF.'api/v2/fields/index', 'fields');
 //die('<pre>$api_field_index = '.print_r($api_field_index, true).'</pre>');
 $api_field_tokens = array_keys($api_field_index);
@@ -35,16 +35,16 @@ if (!empty($api_field_tokens)){ $field_options = $api_field_tokens; }
 else { $field_options = array('intro-field'); }
 $map_options['fields'] = $field_options;
 
-// Generate CSS for the various paths, battles, fields, and types
+// Generate CSS for the various paths, events, fields, and types
 $grid_object_styles = array();
 foreach ($map_options['paths'] AS $path_option){
     $grid_object_styles[] = '.map .wrapper .cell .path.'.$path_option.' { background-image: url(images/path_'.$path_option.'.png); }';
 }
-foreach ($map_options['battles'] AS $battle_option){
-    $grid_object_styles[] = '.map .wrapper .cell .battle.'.$battle_option.' { background-image: url(images/event_battle-'.$battle_option.'.png); }';
+foreach ($map_options['events'] AS $event_option){
+    $grid_object_styles[] = '.map .wrapper .cell .event.'.$event_option.' { background-image: url(images/event_'.$event_option.'.png); }';
 }
 foreach ($map_options['types'] AS $type_option){
-    $grid_object_styles[] = '.map .wrapper .cell .battle[data-type="'.$type_option.'"]:after { background-image: url(images/type_'.$type_option.'.png); }';
+    $grid_object_styles[] = '.map .wrapper .cell .event[data-type="'.$type_option.'"]:after { background-image: url(images/type_'.$type_option.'.png); }';
 }
 $grid_object_styles = PHP_EOL.implode(PHP_EOL, $grid_object_styles).PHP_EOL;
 

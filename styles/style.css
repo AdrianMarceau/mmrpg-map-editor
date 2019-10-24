@@ -122,14 +122,14 @@ body {
 }
 .map[data-edit=""] .wrapper .grid.pallet.none,
 .map[data-edit="paths"] .wrapper .grid.pallet.paths,
-.map[data-edit="battles"] .wrapper .grid.pallet.battles,
+.map[data-edit="events"] .wrapper .grid.pallet.events,
 .map[data-edit="fields"] .wrapper .grid.pallet.fields {
     display: table;
 }
 
 
 .map .wrapper .cell .path,
-.map .wrapper .cell .battle,
+.map .wrapper .cell .event,
 .map .wrapper .cell .field {
     display: block;
     box-sizing: border-box;
@@ -149,14 +149,14 @@ body {
 .map[data-view="all"] .wrapper .grid.canvas .cell .path {
     background-color: transparent;
 }
-.map .wrapper .cell .battle {
+.map .wrapper .cell .event {
 
 }
 .map .wrapper .cell .field {
 
 }
 
-.map .wrapper .cell .battle:after {
+.map .wrapper .cell .event:after {
     content: "";
     display: block;
     position: relative;
@@ -168,23 +168,31 @@ body {
     background-position: 0 0;
     background-repeat: no-repeat;
 }
-.map .wrapper .cell .battle.mecha:after {
+.map .wrapper .cell .event.start:after {
     background-position: -40px 0;
 }
-.map .wrapper .cell .battle.master:after {
+.map .wrapper .cell .event.battle-mecha:after {
+    background-position: -40px 0;
+}
+.map .wrapper .cell .event.battle-master:after {
     background-position: -80px 0;
 }
-.map .wrapper .cell .battle.boss:after {
+.map .wrapper .cell .event.battle-boss:after {
     background-position: -120px 0;
 }
 
-.map .wrapper .cell .field.mecha { width: 18px; height: 18px; top: 11px; left: 11px; }
-.map .wrapper .cell .field.master { width: 26px; height: 26px; top: 7px; left: 7px; }
-.map .wrapper .cell .field.boss { width: 32px; height: 32px; top: 4px; left: 4px; }
+.map .wrapper .cell .field.start { width: 18px; height: 18px; top: 11px; left: 11px; }
+.map .wrapper .cell .field.battle-mecha { width: 18px; height: 18px; top: 11px; left: 11px; }
+.map .wrapper .cell .field.battle-master { width: 26px; height: 26px; top: 7px; left: 7px; }
+.map .wrapper .cell .field.battle-boss { width: 32px; height: 32px; top: 4px; left: 4px; }
 
-.map[data-view="paths"] .wrapper .cell .battle,
+.map .wrapper .cell .event.start:after {
+    display: none;
+}
+
+.map[data-view="paths"] .wrapper .cell .event,
 .map[data-view="paths"] .wrapper .cell .field,
-.map[data-view="battles"] .wrapper .cell .path,
+.map[data-view="events"] .wrapper .cell .path,
 .map[data-view="fields"] .wrapper .cell .path {
     pointer-events: none;
     opacity: 0.25;
