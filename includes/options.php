@@ -44,6 +44,8 @@ foreach ($map_options['events'] AS $event_option){
     $grid_object_styles[] = '.map .wrapper .cell .event.'.$event_option.' { background-image: url(images/event_'.$event_option.'.png); }';
 }
 foreach ($map_options['types'] AS $type_option){
+    $type_colour = $api_type_index[$type_option]['colour_light'];
+    $grid_object_styles[] = '.map .wrapper .grid.pallet.fields .cell .field[data-type="'.$type_option.'"] { border-color: rgb('.implode(',', $type_colour).'); }';
     $grid_object_styles[] = '.map .wrapper .cell .event[data-type="'.$type_option.'"]:after { background-image: url(images/type_'.$type_option.'.png); }';
 }
 $grid_object_styles = PHP_EOL.implode(PHP_EOL, $grid_object_styles).PHP_EOL;

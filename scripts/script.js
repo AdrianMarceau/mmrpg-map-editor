@@ -57,6 +57,7 @@ $(document).ready(function(){
     $('.button[data-dir]', $shift).bind('click', function(e){
         e.preventDefault();
         var $button = $(this);
+        if ($button.hasClass('disabled')){ return false; }
         var dir = $button.attr('data-dir');
         shiftSprites(dir);
         });
@@ -65,6 +66,7 @@ $(document).ready(function(){
     $('.button[data-view]', $views).bind('click', function(e){
         e.preventDefault();
         var $button = $(this);
+        if ($button.hasClass('disabled')){ return false; }
         var view = $button.attr('data-view');
         $('.button[data-view]', $views).removeClass('active');
         $button.addClass('active');
@@ -290,6 +292,7 @@ function changeCellPath($cell, newPath, exportMap){
 
 // Define a function for editing cell's event to something else
 function changeCellEvent($cell, newEvent, exportMap){
+    console.log('changeCellEvent', newEvent, exportMap || false);
 
     // Compensate for missing function arguments or break if required
     if (typeof $cell !== 'object'){ return false; }
@@ -300,16 +303,32 @@ function changeCellEvent($cell, newEvent, exportMap){
     var $event = $cell.find('.event[data-event]');
     var $field = $cell.find('.field[data-field]');
     var currEvent = $event.length ? $event.attr('data-event') : '';
-    var newField = palletCurrent['fields'];
-    var newFieldData = typeof mmrpgFieldIndex[newField] !== 'undefined' ? mmrpgFieldIndex[newField] : {};
-    var newFieldType = typeof newFieldData.type !== 'undefined' && newFieldData.type.length > 0 ? newFieldData.type : 'none';
     var newEvent = newEvent.length ? newEvent : palletCurrent['events'];
     if ($event.length){ $event.remove(); }
     if ($field.length){ $field.remove(); }
+    console.log('currEvent = ', currEvent, 'newEvent = ', newEvent);
+
+    // If this was a 'start' panel, automatically remove any existing
+    if (newEvent === 'start'){
+        console.log('newEvent === start | remove prev sprite');
+        $startEvent = $('.cell[data-col][data-row] .sprite[data-event="start"]', $canvas);
+        console.log('$startEvent =', $startEvent.length, $startEvent);
+        if ($startEvent.length){ $startEvent.parent().empty(); }
+    }
+
+    // Generate the markup for the next event, with or without field image
+    var newFieldType = '';
+    if (newEvent !== 'start'){
+        var newField = palletCurrent['fields'];
+        var newFieldData = typeof mmrpgFieldIndex[newField] !== 'undefined' ? mmrpgFieldIndex[newField] : {};
+        newFieldType = typeof newFieldData.type !== 'undefined' && newFieldData.type.length > 0 ? newFieldData.type : 'none';
+        }
     if (!(currEvent.length && currEvent === newEvent)){
-        var fieldImage = baseAssetHref+'images/fields/'+newField+'/battle-field_avatar.png';
-        $field = $('<img class="sprite field '+newEvent+' '+newField+'" data-field="'+newField+'" data-type="'+newFieldType+'" src="'+fieldImage+'" />');
-        $field.appendTo($cell);
+        if (newEvent !== 'start'){
+            var fieldImage = baseAssetHref+'images/fields/'+newField+'/battle-field_avatar.png';
+            $field = $('<img class="sprite field '+newEvent+' '+newField+'" data-field="'+newField+'" data-type="'+newFieldType+'" src="'+fieldImage+'" />');
+            $field.appendTo($cell);
+            }
         $event = $('<div class="sprite event '+newEvent+'" data-event="'+newEvent+'" data-type="'+newFieldType+'"></div>');
         $event.appendTo($cell);
         }
@@ -321,7 +340,7 @@ function changeCellEvent($cell, newEvent, exportMap){
 
 // Define a function for editing cell's field to something else
 function changeCellField($cell, newField, exportMap){
-    console.log('changeCellField');
+    console.log('changeCellField', newField, exportMap || false);
 
     // Compensate for missing function arguments or break if required
     if (typeof $cell !== 'object'){ return false; }
@@ -336,14 +355,19 @@ function changeCellField($cell, newField, exportMap){
         // Remove the previous field and prepend a new one
         $field.remove();
         var eventToken = $event.attr('data-event');
-        var fieldToken = newField.length ? newField : palletCurrent['fields'];
-        var fieldData = typeof mmrpgFieldIndex[fieldToken] !== 'undefined' ? mmrpgFieldIndex[fieldToken] : {};
-        var fieldImage = baseAssetHref+'images/fields/'+fieldToken+'/battle-field_avatar.png';
-        var fieldType = typeof fieldData.type !== 'undefined' && fieldData.type.length > 0 ? fieldData.type : 'none';
-        console.log('fieldType = ', fieldType);
-        $field = $('<img class="sprite field '+eventToken+' '+fieldToken+'" data-field="'+fieldToken+'" data-type="'+fieldType+'" src="'+fieldImage+'" />');
-        $field.insertBefore($event);
-        $event.attr('data-type', fieldType);
+        console.log('eventToken = ', eventToken);
+        if (eventToken === 'start'){
+            $event.attr('data-type', '');
+        } else {
+            var fieldToken = newField.length ? newField : palletCurrent['fields'];
+            var fieldData = typeof mmrpgFieldIndex[fieldToken] !== 'undefined' ? mmrpgFieldIndex[fieldToken] : {};
+            var fieldImage = baseAssetHref+'images/fields/'+fieldToken+'/battle-field_avatar.png';
+            var fieldType = typeof fieldData.type !== 'undefined' && fieldData.type.length > 0 ? fieldData.type : 'none';
+            console.log('fieldToken = ', fieldToken, 'fieldType = ', fieldType, 'fieldData = ', fieldData);
+            $field = $('<img class="sprite field '+eventToken+' '+fieldToken+'" data-field="'+fieldToken+'" data-type="'+fieldType+'" src="'+fieldImage+'" />');
+            $field.insertBefore($event);
+            $event.attr('data-type', fieldType);
+        }
 
         // Update the tooltip title of the parent cell
         var col = parseInt($cell.attr('data-col'));
@@ -408,6 +432,11 @@ function exportMap(){
 
     $export.animate({borderColor:'green'},600,'swing', function(){ $(this).css({borderColor:''}); });
 
+    // If a start markup is visible, allow the user to TEST their creation
+    var $testViewButton = $('.button[data-view="test"]', $views);
+    var hasStartEvent = $('.cell[data-col][data-row] .sprite[data-event="start"]', $canvas).length ? true : false;
+    if (hasStartEvent && mapEvents.length > 1){ $testViewButton.removeClass('disabled'); }
+    else { $testViewButton.addClass('disabled'); }
 
 }
 

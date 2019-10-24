@@ -186,6 +186,11 @@ body {
 .map .wrapper .cell .field.battle-master { width: 26px; height: 26px; top: 7px; left: 7px; }
 .map .wrapper .cell .field.battle-boss { width: 32px; height: 32px; top: 4px; left: 4px; }
 
+.map .wrapper .grid.pallet.fields .cell .field {
+    border: 2px solid white;
+    border-radius: 6px;
+}
+
 .map .wrapper .cell .event.start:after {
     display: none;
 }
@@ -262,6 +267,11 @@ body {
 }
 .controls .shift .button {
     margin-left: 5px;
+}
+.controls .views .button.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+    text-decoration: line-through;
 }
 
 .tools {
