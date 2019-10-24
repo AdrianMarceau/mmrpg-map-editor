@@ -31,6 +31,7 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
 <head>
     <title>Overworld Test</title>
     <link type="text/css" rel="stylesheet" href="styles/style.css?<?= MMRPG_CACHE_DATE ?>" />
+    <style type="text/css"><?= $grid_object_styles ?></style>
 </head>
 <body>
 
@@ -113,6 +114,10 @@ baseAssetHref = '<?= MMRPG_BASE_ASSET_HREF ?>';
 
 // Define the map options we can use in the editor
 mapOptions = <?= json_encode($map_options) ?>;
+
+// Provide the MMRPG type, field, etc. index for use in the editor
+mmrpgTypeIndex = <?= json_encode($api_type_index) ?>;
+mmrpgFieldIndex = <?= json_encode($api_field_index) ?>;
 
 </script>
 

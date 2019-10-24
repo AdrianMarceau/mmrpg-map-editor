@@ -12,13 +12,20 @@ var $export;
 var gridSize;
 var mapOptions;
 var palletCurrent;
+var mmrpgTypeIndex = {};
+var mmrpgFieldIndex = {};
 
 // Predefine default base paths for map assets
-var baseHref = 'http://mmrpg.map.editor/';
-var baseAssetHref = 'http://rpg.megamanpoweredup.net/';
+//var baseHref = 'http://mmrpg.map.editor/';
+//var baseAssetHref = 'http://rpg.megamanpoweredup.net/';
+var baseHref = 'http://local.dev.mmrpg-world.net/mapeditor2k17/';
+var baseAssetHref = 'http://local.prototype.mmrpg-world.net/';
 
 // Wait for document ready before delegating events
 $(document).ready(function(){
+
+    //console.log('RETURN FALSE');
+    //return false;
 
     // Define references to key dom elements
     $map = $('.map');
@@ -294,14 +301,16 @@ function changeCellBattle($cell, newBattle, exportMap){
     var $field = $cell.find('.field[data-field]');
     var currBattle = $battle.length ? $battle.attr('data-battle') : '';
     var newField = palletCurrent['fields'];
+    var newFieldData = typeof mmrpgFieldIndex[newField] !== 'undefined' ? mmrpgFieldIndex[newField] : {};
+    var newFieldType = typeof newFieldData.type !== 'undefined' && newFieldData.type.length > 0 ? newFieldData.type : 'none';
     var newBattle = newBattle.length ? newBattle : palletCurrent['battles'];
     if ($battle.length){ $battle.remove(); }
     if ($field.length){ $field.remove(); }
     if (!(currBattle.length && currBattle === newBattle)){
         var fieldImage = baseAssetHref+'images/fields/'+newField+'/battle-field_avatar.png';
-        $field = $('<img class="sprite field '+newBattle+' '+newField+'" data-field="'+newField+'" src="'+fieldImage+'" />');
+        $field = $('<img class="sprite field '+newBattle+' '+newField+'" data-field="'+newField+'" data-type="'+newFieldType+'" src="'+fieldImage+'" />');
         $field.appendTo($cell);
-        $battle = $('<div class="sprite battle '+newBattle+'" data-battle="'+newBattle+'"></div>');
+        $battle = $('<div class="sprite battle '+newBattle+'" data-battle="'+newBattle+'" data-type="'+newFieldType+'"></div>');
         $battle.appendTo($cell);
         }
 
@@ -312,6 +321,7 @@ function changeCellBattle($cell, newBattle, exportMap){
 
 // Define a function for editing cell's field to something else
 function changeCellField($cell, newField, exportMap){
+    console.log('changeCellField');
 
     // Compensate for missing function arguments or break if required
     if (typeof $cell !== 'object'){ return false; }
@@ -327,9 +337,13 @@ function changeCellField($cell, newField, exportMap){
         $field.remove();
         var battleToken = $battle.attr('data-battle');
         var fieldToken = newField.length ? newField : palletCurrent['fields'];
+        var fieldData = typeof mmrpgFieldIndex[fieldToken] !== 'undefined' ? mmrpgFieldIndex[fieldToken] : {};
         var fieldImage = baseAssetHref+'images/fields/'+fieldToken+'/battle-field_avatar.png';
-        $field = $('<img class="sprite field '+battleToken+' '+fieldToken+'" data-field="'+fieldToken+'" src="'+fieldImage+'" />');
+        var fieldType = typeof fieldData.type !== 'undefined' && fieldData.type.length > 0 ? fieldData.type : 'none';
+        console.log('fieldType = ', fieldType);
+        $field = $('<img class="sprite field '+battleToken+' '+fieldToken+'" data-field="'+fieldToken+'" data-type="'+fieldType+'" src="'+fieldImage+'" />');
         $field.insertBefore($battle);
+        $battle.attr('data-type', fieldType);
 
         // Update the tooltip title of the parent cell
         var col = parseInt($cell.attr('data-col'));

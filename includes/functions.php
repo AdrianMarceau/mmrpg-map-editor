@@ -5,6 +5,8 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
 
     // Pull in global option indexes
     global $map_options;
+    global $api_field_index;
+    global $grid_styles_cache;
 
     // Compensate for missing sprite arrays
     if (!is_array($grid_sprites)){ $grid_sprites = array(); }
@@ -49,13 +51,17 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
 
                         $field_class = $battle_data[0];
                         $field_token = isset($battle_data[1]) ? $battle_data[1] : $map_options['fields'][0];
+                        if (!isset($api_field_index[$field_token])){ $field_token = 'intro-field'; }
+                        $field_data = !empty($api_field_index[$field_token]) ? $api_field_index[$field_token] : array();
+                        if (empty($field_data)){ continue; }
+                        $field_type = !empty($field_data['type']) ? $field_data['type'] : 'none';
                         $field_image = MMRPG_BASE_ASSET_HREF.'images/fields/'.$field_token.'/battle-field_avatar.png';
-                        $cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" src="'.$field_image.'" />';
+                        $cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'" src="'.$field_image.'" />';
                         $cell_title .= ' | '.$field_token;
 
                         $battle_class = $battle_data[0];
                         $battle_token = $battle_data[0];
-                        $cell_markup .= '<div class="sprite battle '.$battle_class.'" data-battle="'.$battle_token.'"></div>';
+                        $cell_markup .= '<div class="sprite battle '.$battle_class.'" data-battle="'.$battle_token.'" data-type="'.$field_type.'"></div>';
 
                     }
 
@@ -67,8 +73,12 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
 
                         $field_class = 'boss';
                         $field_token = $field_data[0];
+                        if (!isset($api_field_index[$field_token])){ $field_token = 'intro-field'; }
+                        $field_data = !empty($api_field_index[$field_token]) ? $api_field_index[$field_token] : array();
+                        if (empty($field_data)){ continue; }
+                        $field_type = !empty($field_data['type']) ? $field_data['type'] : 'none';
                         $field_image = MMRPG_BASE_ASSET_HREF.'images/fields/'.$field_token.'/battle-field_avatar.png';
-                        $cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" src="'.$field_image.'" />';
+                        $cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'" src="'.$field_image.'" />';
                         $cell_title .= ' | '.$field_token;
 
                     }
@@ -136,6 +146,22 @@ function get_json_api_field($url, $field, $data = false, $method = 'post'){
     if (empty($json_data) || !isset($json_data[$field])){ return false; }
     return $json_data[$field];
 
+}
+
+// Define a function for calling an API and returning JSON data
+function get_json_api_data($url, $data = false, $method = 'post'){
+    $json_data = call_json_api($url, $data, $method);
+    if (empty($json_data)){ return false; }
+    elseif ($json_data['status'] !== 'success'){ return false; }
+    elseif (!isset($json_data['data'])){ return false; }
+    return $json_data['data'];
+}
+
+// Define a function for calling an API and returning JSON data
+function get_json_api_data_field($url, $field, $data = false, $method = 'post'){
+    $json_data = get_json_api_data($url, $data, $method);
+    if (!isset($json_data[$field])){ return false; }
+    return $json_data[$field];
 }
 
 ?>

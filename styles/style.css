@@ -146,11 +146,36 @@ body {
 .map .wrapper .grid.canvas .cell .path {
     background-color: rgba(255, 255, 255, 0.05);
 }
+.map[data-view="all"] .wrapper .grid.canvas .cell .path {
+    background-color: transparent;
+}
 .map .wrapper .cell .battle {
 
 }
 .map .wrapper .cell .field {
 
+}
+
+.map .wrapper .cell .battle:after {
+    content: "";
+    display: block;
+    position: relative;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    background-image: none;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+}
+.map .wrapper .cell .battle.mecha:after {
+    background-position: -40px 0;
+}
+.map .wrapper .cell .battle.master:after {
+    background-position: -80px 0;
+}
+.map .wrapper .cell .battle.boss:after {
+    background-position: -120px 0;
 }
 
 .map .wrapper .cell .field.mecha { width: 18px; height: 18px; top: 11px; left: 11px; }
