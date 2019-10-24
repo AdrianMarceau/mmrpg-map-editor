@@ -182,31 +182,6 @@ body {
 .map .wrapper .cell .field.master { width: 26px; height: 26px; top: 7px; left: 7px; }
 .map .wrapper .cell .field.boss { width: 32px; height: 32px; top: 4px; left: 4px; }
 
-.map .wrapper .cell .path.h-line { background-image: url(../images/paths/h-line.png); }
-.map .wrapper .cell .path.v-line { background-image: url(../images/paths/v-line.png); }
-
-.map .wrapper .cell .path.l-stub { background-image: url(../images/paths/l-stub.png); }
-.map .wrapper .cell .path.r-stub { background-image: url(../images/paths/r-stub.png); }
-.map .wrapper .cell .path.t-stub { background-image: url(../images/paths/t-stub.png); }
-.map .wrapper .cell .path.b-stub { background-image: url(../images/paths/b-stub.png); }
-
-.map .wrapper .cell .path.tl-joint { background-image: url(../images/paths/tl-joint.png); }
-.map .wrapper .cell .path.tr-joint { background-image: url(../images/paths/tr-joint.png); }
-.map .wrapper .cell .path.bl-joint { background-image: url(../images/paths/bl-joint.png); }
-.map .wrapper .cell .path.br-joint { background-image: url(../images/paths/br-joint.png); }
-
-.map .wrapper .cell .path.l-tee { background-image: url(../images/paths/l-tee.png); }
-.map .wrapper .cell .path.r-tee { background-image: url(../images/paths/r-tee.png); }
-.map .wrapper .cell .path.t-tee { background-image: url(../images/paths/t-tee.png); }
-.map .wrapper .cell .path.b-tee { background-image: url(../images/paths/b-tee.png); }
-
-.map .wrapper .cell .path.cross { background-image: url(../images/paths/cross.png); }
-
-.map .wrapper .cell .battle.mecha { background-image: url(../images/battles/mecha.png); }
-.map .wrapper .cell .battle.master { background-image: url(../images/battles/master.png); }
-.map .wrapper .cell .battle.boss { background-image: url(../images/battles/boss.png); }
-
-
 .map[data-view="paths"] .wrapper .cell .battle,
 .map[data-view="paths"] .wrapper .cell .field,
 .map[data-view="battles"] .wrapper .cell .path,

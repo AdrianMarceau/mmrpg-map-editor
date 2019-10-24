@@ -12,10 +12,10 @@ $path_options = array_merge($path_options, array('tl-joint', 'tr-joint', 'bl-joi
 $path_options = array_merge($path_options, array('b-tee', 'r-tee', 'l-tee', 't-tee'));
 $map_options['paths'] = $path_options;
 
-// Define the different kinds of battles on the map
-$battle_options = array();
-$battle_options = array_merge($battle_options, array('mecha', 'master', 'boss'));
-$map_options['battles'] = $battle_options;
+// Define the different kinds of events on the map
+$event_options = array();
+$event_options = array_merge($event_options, array('start', 'battle_mecha', 'battle_master', 'battle_boss'));
+$map_options['battles'] = $event_options;
 
 // Define the different type tokens available for battles
 $api_type_index = get_json_api_data_field(MMRPG_BASE_ASSET_HREF.'api/v2/types/index', 'types');
@@ -38,13 +38,13 @@ $map_options['fields'] = $field_options;
 // Generate CSS for the various paths, battles, fields, and types
 $grid_object_styles = array();
 foreach ($map_options['paths'] AS $path_option){
-    $grid_object_styles[] = '.map .wrapper .cell .path.'.$path_option.' { background-image: url(images/paths/'.$path_option.'.png); }';
+    $grid_object_styles[] = '.map .wrapper .cell .path.'.$path_option.' { background-image: url(images/path_'.$path_option.'.png); }';
 }
 foreach ($map_options['battles'] AS $battle_option){
-    $grid_object_styles[] = '.map .wrapper .cell .battle.'.$battle_option.' { background-image: url(images/battles/'.$battle_option.'.png); }';
+    $grid_object_styles[] = '.map .wrapper .cell .battle.'.$battle_option.' { background-image: url(images/event_battle-'.$battle_option.'.png); }';
 }
 foreach ($map_options['types'] AS $type_option){
-    $grid_object_styles[] = '.map .wrapper .cell .battle[data-type="'.$type_option.'"]:after { background-image: url(images/types/'.$type_option.'.png); }';
+    $grid_object_styles[] = '.map .wrapper .cell .battle[data-type="'.$type_option.'"]:after { background-image: url(images/type_'.$type_option.'.png); }';
 }
 $grid_object_styles = PHP_EOL.implode(PHP_EOL, $grid_object_styles).PHP_EOL;
 

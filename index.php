@@ -42,6 +42,7 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
             <a class="button paths" data-view="paths">Edit Paths</a>
             <a class="button battles" data-view="battles">Edit Battles</a>
             <a class="button fields" data-view="fields">Edit Fields</a>
+            <a class="button test" data-view="test">Test</a>
         </div>
 
         <div class="shift">
