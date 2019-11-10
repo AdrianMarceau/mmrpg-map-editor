@@ -1,5 +1,43 @@
 <?php
 
+// Define a function for loading map data from a JSON file
+function load_map_data_from_json($canvas_data_file,
+    &$map_canvas_info,
+    &$map_canvas_paths,
+    &$map_canvas_events
+    ){
+    // Attempt to load the json data file
+    $canvas_data_json = file_get_contents($canvas_data_file);
+    //echo('<pre>$canvas_data_json = '.print_r($canvas_data_json, true).'</pre>');
+    if (empty($canvas_data_json) || substr($canvas_data_json, 0, 1) !== '{'){ return false; }
+    // Attempt to parse the json data file into an object
+    $canvas_data_object = json_decode($canvas_data_json, true);
+    //echo('<pre>$canvas_data_object = '.print_r($canvas_data_object, true).'</pre>');
+    if (empty($canvas_data_object)){ return false; }
+    // Load info data if it exists in the data object
+    if (!empty($canvas_data_object['name'])){ $map_canvas_info['name'] = $canvas_data_object['name']; }
+    // Load path data if it exists in the data object
+    if (!empty($canvas_data_object['paths'])){
+        foreach ($canvas_data_object['paths'] AS $col_row => $path_token){
+            if (!strstr($col_row, '-')){ continue; }
+            list($col, $row) = explode('-', $col_row);
+            $map_canvas_paths[$col][$row] = $path_token;
+        }
+    }
+    // Load event data if it exists in the data object
+    if (!empty($canvas_data_object['events'])){
+        foreach ($canvas_data_object['events'] AS $col_row => $event_token){
+            if (!strstr($col_row, '-')){ continue; }
+            list($col, $row) = explode('-', $col_row);
+            $map_canvas_events[$col][$row] = $event_token;
+            if (!empty($canvas_data_object['fields'][$col_row])){
+                $field_token = $canvas_data_object['fields'][$col_row];
+                $map_canvas_events[$col][$row] .= '/'.$field_token;
+            }
+        }
+    }
+}
+
 // Define a function that generates a table-based map grid with sprites if provided
 function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites = array(), $option_kind = ''){
 

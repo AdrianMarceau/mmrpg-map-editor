@@ -423,16 +423,27 @@ body {
     margin: 20px auto 0;
     padding: 0 60px 10px;
 }
+.tools:after {
+    content: "";
+    display: block;
+    clear: both;
+}
 .tools .export {
     display: block;
     box-sizing: border-box;
-    width: 100%;
     margin: 0 auto 10px;
     border: 1px solid #262626;
     background-color: #1a1a1a;
     padding: 6px;
     color: #CACACA;
     font-family: "Courier New";
+}
+.tools textarea.export {
+    width: 100%;
+}
+.tools button.export {
+    float: right;
+    clear: left;
 }
 
 .version {

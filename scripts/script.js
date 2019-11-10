@@ -10,8 +10,10 @@ var $export;
 
 // Predefine object vars for map settings
 var gridSize;
+var mapName;
 var mapOptions;
 var palletCurrent;
+var globalCellIndex = {};
 var mmrpgTypeIndex = {};
 var mmrpgFieldIndex = {};
 
@@ -35,6 +37,8 @@ $(document).ready(function(){
     $views = $('.views');
     $tools = $('.tools');
     $export = $('.export', $tools);
+
+    mapName = $map.is('[data-name]') ? $map.attr('data-name') : 'map1';
 
     // Collect the grid size from the canvas grid
     gridSize = {
@@ -397,153 +401,8 @@ function changeCellField($cell, newField, exportMap){
 
 }
 
-// Define a function for exporting the map to PHP variables
-function exportMap(){
-
-    var mapPaths = [];
-    var mapEvents = [];
-    $('.cell[data-col][data-row]', $canvas).each(function(index){
-
-        var $cell = $(this);
-        var col = parseInt($cell.attr('data-col'));
-        var row = parseInt($cell.attr('data-row'));
-        var name = col+'-'+row;
-
-        var $path = $('.path[data-path]', $cell);
-        var $event = $('.event[data-event]', $cell);
-        var $field = $('.field[data-field]', $cell);
-
-        if ($path.length){
-            var pathToken = $path.attr('data-path');
-            mapPaths.push('$map_canvas_paths['+col+']['+row+'] = \''+pathToken+'\';');
-            }
-
-        if ($event.length && $field.length){
-            var eventToken = $event.attr('data-event');
-            var fieldToken = $field.attr('data-field');
-            mapEvents.push('$map_canvas_events['+col+']['+row+'] = \''+eventToken+'/'+fieldToken+'\';');
-            } else if ($event.length){
-            var eventToken = $event.attr('data-event');
-            mapEvents.push('$map_canvas_events['+col+']['+row+'] = \''+eventToken+'\';');
-            }
-
-        });
-
-    var exportString = '';
-    exportString += '<\?php \n\n';
-
-    if (mapPaths.length){
-        exportString += '// Define the paths that should appear on the map (x'+mapPaths.length+') \n';
-        exportString += mapPaths.join('\n');
-        exportString += '\n\n';
-        }
-    if (mapEvents.length){
-        exportString += '// Define the events that should appear on the map (x'+mapEvents.length+') \n';
-        exportString += mapEvents.join('\n');
-        exportString += '\n\n';
-        }
-
-    exportString += '\?>';
-    exportString = exportString.replace(/\s+$/, '');
-
-    $export.val(exportString);
-
-    $export.animate({borderColor:'green'},600,'swing', function(){ $(this).css({borderColor:''}); });
-
-    // If an origin and destination have been defined, allow the user to TEST their creation
-    var $testViewButton = $('.button[data-view="test"]', $views);
-    var hasOriginEvent = $('.cell[data-col][data-row] .sprite[data-event="origin"]', $canvas).length ? true : false;
-    var hasDestinationEvent = $('.cell[data-col][data-row] .sprite[data-event="destination"]', $canvas).length ? true : false;
-    if (hasOriginEvent && hasDestinationEvent && mapEvents.length > 2){ $testViewButton.removeClass('disabled'); }
-    else { $testViewButton.addClass('disabled'); }
-
-}
-
-// Define a function for queueing up a map export when ready
-var exportMapTimeout;
-function queueExportMap(){
-    if (typeof exportMapTimeout !== 'undefined'){ clearTimeout(exportMapTimeout); }
-    exportMapTimeout = setTimeout(function(){ exportMap(); }, 300);
-}
-
-
-
-// -- TEST MODE PROGRAMMING -- //
-
-var testModeCellIndex = {};
-var completedEventCells = [];
-var allowedEventCells = [];
-var $testMap = false;
-var $testCanvas = false;
-var $testPallets = false;
-var $testCanvasCells = false;
-var $originCell = false;
-var orginClickTimeout = false;
-var originCellPosition = false;
-var $destinationCell = false;
-var destinationCellPosition = false;
-var completedEventCellsCount = 0;
-var totalEventCellsCount = 0;
-var percentComplete = 0;
-var currentTestProgress = {};
-function enterTestMode(){
-    //console.log('enterTestMode()');
-    resetTestModeVariables();
-    reindexTestCellContents();
-    recalculateAllowedEventCells();
-    recalculateTestProgress();
-    updateCellsWithTestModeProgress();
-    generateTestModeEvents();
-    updateTestModePallet();
-
-    /*
-    // Auto click the origin cell
-    if (orginClickTimeout !== false){ clearTimeout(orginClickTimeout); }
-    orginClickTimeout = setTimeout(function(){
-        $testCanvasCells.find('.sprite.event.origin').parent().trigger('click');
-        }, 2000);
-    */
-
-    //console.log('completedEventCells =', completedEventCells);
-    //console.log('allowedEventCells =', allowedEventCells);
-}
-function exitTestMode(){
-    //console.log('exitTestMode()');
-    resetTestModeVariables();
-}
-function resetTestModeVariables(){
-    //console.log('resetTestModeVariables()');
-    testModeCellIndex = {};
-    completedEventCells = [];
-    allowedEventCells = [];
-    completedEventCellsCount = 0;
-    totalEventCellsCount = 0;
-    percentComplete = 0;
-    $testMap = $('.map[data-view="test"]');
-    $testCanvas = $('.grid.canvas', $testMap);
-    $testPallets = $('.grid.pallet', $testMap);
-    $testCanvasCells = $('.cell[data-col][data-row]', $testCanvas);
-    $originCell = $testCanvasCells.find('.sprite.origin').parent();
-    $destinationCell = $testCanvasCells.find('.sprite.destination').parent();
-    originCellPosition = $originCell.attr('data-col')+'-'+$originCell.attr('data-row');
-    destinationCellPosition = $destinationCell.attr('data-col')+'-'+$destinationCell.attr('data-row');
-    $('.cell[data-col][data-row]', $testCanvas)
-        .removeClass('locked')
-        .removeClass('allowed')
-        .removeClass('completed')
-        ;
-    //console.log('cells = ', $testCanvasCells.length);
-}
-function preloadAllowedEventCells(){
-    //console.log('preloadAllowedEventCells()');
-    $originEvent = $('.cell[data-col][data-row] .sprite[data-event="origin"]', $testCanvas);
-    if ($originEvent.length){ $cell = $originEvent.parent(); allowedEventCells.push($cell.attr('data-col')+'-'+$cell.attr('data-row')); }
-}
-function preloadCompletedEventCells(){
-    //console.log('preloadCompletedEventCells()');
-}
-function reindexTestCellContents(){
-    //console.log('reindexTestCellContents()');
+function reindexCellContents(){
+    //console.log('reindexCellContents()');
 
     var cellIndex = {};
     var originCellPosition = '';
@@ -555,7 +414,8 @@ function reindexTestCellContents(){
     var cellsWithEventFields = [];
     var cellsWithProgressGates = [];
 
-    $testCanvasCells.each(function(){
+    var $gridCells = $('.cell[data-col][data-row]', $canvas);
+    $gridCells.each(function(){
         var $cell = $(this);
         var $cellSprites = $('.sprite', $cell);
         var cellPosition = $cell.attr('data-col')+'-'+$cell.attr('data-row');
@@ -585,7 +445,7 @@ function reindexTestCellContents(){
             }
         });
 
-    testModeCellIndex = {
+    globalCellIndex = {
         index: cellIndex,
         origin: originCellPosition,
         destination: destinationCellPosition,
@@ -596,40 +456,171 @@ function reindexTestCellContents(){
         withProgressGates: cellsWithProgressGates,
         };
 
-    //console.log('testModeCellIndex = ', testModeCellIndex);
+    //console.log('globalCellIndex = ', globalCellIndex);
 
-    //console.log('MAP JSON testModeCellIndex.index = ', JSON.stringify(testModeCellIndex.index));
+    //console.log('MAP JSON globalCellIndex.index = ', JSON.stringify(globalCellIndex.index));
 
     //exportCellIndexAsJSON();
 
 }
-function exportCellIndexAsJSON(){
+function exportCellIndex(){
 
-    var jsonPaths = {};
-    var jsonEvents = {};
-    var jsonFields = {};
+    var exportPaths = {};
+    var exportEvents = {};
+    var exportFields = {};
 
-    var testModeCellKeys = Object.keys(testModeCellIndex.index);
-    for (var i = 0; i < testModeCellKeys.length; i++){
-        var cellPosition = testModeCellKeys[i];
-        var cellData = testModeCellIndex.index[cellPosition];
-        if (typeof cellData.path !== 'undefined'){ jsonPaths[cellPosition] = cellData.path; }
-        if (typeof cellData.event !== 'undefined'){ jsonEvents[cellPosition] = cellData.event; }
-        if (typeof cellData.field !== 'undefined'){ jsonFields[cellPosition] = cellData.field; }
+    var globalCellKeys = Object.keys(globalCellIndex.index);
+    for (var i = 0; i < globalCellKeys.length; i++){
+        var cellPosition = globalCellKeys[i];
+        var cellData = globalCellIndex.index[cellPosition];
+        if (typeof cellData.path !== 'undefined'){ exportPaths[cellPosition] = cellData.path; }
+        if (typeof cellData.event !== 'undefined'){ exportEvents[cellPosition] = cellData.event; }
+        if (typeof cellData.field !== 'undefined'){ exportFields[cellPosition] = cellData.field; }
         }
 
-    var jsonDataIndex = {
-        paths: jsonPaths,
-        events: jsonEvents,
-        fields: jsonFields
+    var exportCellIndex = {
+        name: mapName,
+        paths: exportPaths,
+        events: exportEvents,
+        fields: exportFields
         };
 
-    var jsonDataIndexString = JSON.stringify(jsonDataIndex);
+    //console.log('MAP dataIndex = ', exportCellIndex);
 
-    //console.log('MAP JSON jsonDataIndexString = ', jsonDataIndexString);
+    return exportCellIndex;
+
+}
+function exportCellIndexAsJSON(exportedCellIndex){
+
+    var exportedCellIndex = typeof exportedCellIndex !== 'undefined' ? exportedCellIndex : exportCellIndex();
+
+    var jsonDataIndexString = JSON.stringify(exportedCellIndex);
+
+    //console.log('MAP jsonDataIndexString = ', jsonDataIndexString);
 
     return jsonDataIndexString;
 
+}
+// Define a function for exporting the map to PHP variables
+function exportMap(){
+    //console.log('exportMap()');
+
+    // Reindex all cells into the global index
+    reindexCellContents();
+    var exportedCellIndex = exportCellIndex();
+    var exportedCellIndexString = exportCellIndexAsJSON(exportedCellIndex);
+    $export.val(exportedCellIndexString);
+
+    // If an origin and destination have been defined, allow the user to TEST their creation
+    var $testViewButton = $('.button[data-view="test"]', $views);
+    var hasOriginEvent = $('.cell[data-col][data-row] .sprite[data-event="origin"]', $canvas).length ? true : false;
+    var hasDestinationEvent = $('.cell[data-col][data-row] .sprite[data-event="destination"]', $canvas).length ? true : false;
+    //console.log('$testViewButton =', $testViewButton.length, $testViewButton);
+    //console.log('hasOriginEvent =', hasOriginEvent);
+    //console.log('hasDestinationEvent =', hasDestinationEvent);
+    //console.log('exportedCellIndex.events =', Object.keys(exportedCellIndex.events).length, exportedCellIndex.events);
+    if (hasOriginEvent && hasDestinationEvent && Object.keys(exportedCellIndex.events).length > 2){ $testViewButton.removeClass('disabled'); }
+    else { $testViewButton.addClass('disabled'); }
+
+}
+
+// Define a function for queueing up a map export when ready
+var exportMapTimeout;
+function queueExportMap(){
+    if (typeof exportMapTimeout !== 'undefined'){ clearTimeout(exportMapTimeout); }
+    exportMapTimeout = setTimeout(function(){ exportMap(); }, 300);
+}
+
+// Define a function for downloading the exported file
+function downloadExportMapAsFile(){
+    if (typeof $export === 'undefined' || !$export.length){ return false; }
+    var text = document.getElementById("export-map-json").value;
+    text = text.replace(/\n/g, "\r\n"); // To retain the Line breaks.
+    var blob = new Blob([text], { type: "text/plain"});
+    var anchor = document.createElement("a");
+    anchor.download = mapName+'.json';
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.target ="_blank";
+    anchor.style.display = "none"; // just to be safe!
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+ }
+
+
+
+// -- TEST MODE PROGRAMMING -- //
+
+var completedEventCells = [];
+var allowedEventCells = [];
+var $testMap = false;
+var $testCanvas = false;
+var $testPallets = false;
+var $testCanvasCells = false;
+var $originCell = false;
+var orginClickTimeout = false;
+var originCellPosition = false;
+var $destinationCell = false;
+var destinationCellPosition = false;
+var completedEventCellsCount = 0;
+var totalEventCellsCount = 0;
+var percentComplete = 0;
+var currentTestProgress = {};
+function enterTestMode(){
+    //console.log('enterTestMode()');
+    resetTestModeVariables();
+    reindexCellContents();
+    recalculateAllowedEventCells();
+    recalculateTestProgress();
+    updateCellsWithTestModeProgress();
+    generateTestModeEvents();
+    updateTestModePallet();
+
+    /*
+    // Auto click the origin cell
+    if (orginClickTimeout !== false){ clearTimeout(orginClickTimeout); }
+    orginClickTimeout = setTimeout(function(){
+        $testCanvasCells.find('.sprite.event.origin').parent().trigger('click');
+        }, 2000);
+    */
+
+    //console.log('completedEventCells =', completedEventCells);
+    //console.log('allowedEventCells =', allowedEventCells);
+}
+function exitTestMode(){
+    //console.log('exitTestMode()');
+    resetTestModeVariables();
+}
+function resetTestModeVariables(){
+    //console.log('resetTestModeVariables()');
+    globalCellIndex = {};
+    completedEventCells = [];
+    allowedEventCells = [];
+    completedEventCellsCount = 0;
+    totalEventCellsCount = 0;
+    percentComplete = 0;
+    $testMap = $('.map[data-view="test"]');
+    $testCanvas = $('.grid.canvas', $testMap);
+    $testPallets = $('.grid.pallet', $testMap);
+    $testCanvasCells = $('.cell[data-col][data-row]', $testCanvas);
+    $originCell = $testCanvasCells.find('.sprite.origin').parent();
+    $destinationCell = $testCanvasCells.find('.sprite.destination').parent();
+    originCellPosition = $originCell.attr('data-col')+'-'+$originCell.attr('data-row');
+    destinationCellPosition = $destinationCell.attr('data-col')+'-'+$destinationCell.attr('data-row');
+    $('.cell[data-col][data-row]', $testCanvas)
+        .removeClass('locked')
+        .removeClass('allowed')
+        .removeClass('completed')
+        ;
+    //console.log('cells = ', $testCanvasCells.length);
+}
+function preloadAllowedEventCells(){
+    //console.log('preloadAllowedEventCells()');
+    $originEvent = $('.cell[data-col][data-row] .sprite[data-event="origin"]', $testCanvas);
+    if ($originEvent.length){ $cell = $originEvent.parent(); allowedEventCells.push($cell.attr('data-col')+'-'+$cell.attr('data-row')); }
+}
+function preloadCompletedEventCells(){
+    //console.log('preloadCompletedEventCells()');
 }
 function recalculateAllowedEventCells(){
     //console.log('calculateCompletedEventCells()');
@@ -646,10 +637,10 @@ function recalculateAllowedEventCells(){
         var belowPosition = completedCellCol+'-'+(completedCellRow + 1); // below (+1 row)
         var leftPosition = (completedCellCol - 1)+'-'+completedCellRow; // left (-1 col)
         var rightPosition = (completedCellCol + 1)+'-'+completedCellRow; // right (+1 col)
-        if (testModeCellIndex.withContent.indexOf(abovePosition) !== -1){ allowedEventCells.push(abovePosition); }
-        if (testModeCellIndex.withContent.indexOf(belowPosition) !== -1){ allowedEventCells.push(belowPosition); }
-        if (testModeCellIndex.withContent.indexOf(leftPosition) !== -1){ allowedEventCells.push(leftPosition); }
-        if (testModeCellIndex.withContent.indexOf(rightPosition) !== -1){ allowedEventCells.push(rightPosition); }
+        if (globalCellIndex.withContent.indexOf(abovePosition) !== -1){ allowedEventCells.push(abovePosition); }
+        if (globalCellIndex.withContent.indexOf(belowPosition) !== -1){ allowedEventCells.push(belowPosition); }
+        if (globalCellIndex.withContent.indexOf(leftPosition) !== -1){ allowedEventCells.push(leftPosition); }
+        if (globalCellIndex.withContent.indexOf(rightPosition) !== -1){ allowedEventCells.push(rightPosition); }
         }
 }
 var autoClickInProgress = false;
@@ -715,7 +706,7 @@ function autoCompleteAdjacentPathOnlyCells(completedCellToken){
         }
 
     /*
-    console.log({
+    //console.log({
         trigger: completedCellToken,
         above: [abovePosition, $aboveCell.length, $aboveCell.find('.sprite.event').length, $aboveCell.find('.sprite.path').length],
         below: [belowPosition, $belowCell.length, $belowCell.find('.sprite.event').length, $belowCell.find('.sprite.path').length],
@@ -774,7 +765,7 @@ function testCellClickFunction($testCell, triggeredByUser){
         var cellToken = $testCell.attr('data-col')+'-'+$testCell.attr('data-row');
         if (!$testCell.hasClass('locked')){
             //console.log('click an allowed cell to complete it!');
-            if (testModeCellIndex.withContent.indexOf(cellToken) !== -1
+            if (globalCellIndex.withContent.indexOf(cellToken) !== -1
                 && completedEventCells.indexOf(cellToken) === -1){
                 var allowComplete = true;
                 var $pathSprite = $testCell.find('.sprite.path');
@@ -808,10 +799,10 @@ function recalculateTestProgress(){
     var gatesOpened = 0;
     for (var i = 0; i < completedEventCells.length; i++){
         var completedCell = completedEventCells[i];
-        if (testModeCellIndex.withEventBattles.indexOf(completedCell) !== -1){ battlesComplete++; }
-        else if (testModeCellIndex.withProgressGates.indexOf(completedCell) !== -1){ gatesOpened++; }
+        if (globalCellIndex.withEventBattles.indexOf(completedCell) !== -1){ battlesComplete++; }
+        else if (globalCellIndex.withProgressGates.indexOf(completedCell) !== -1){ gatesOpened++; }
         }
-    var applicableEventCellTotal = testModeCellIndex.withEventBattles.length + testModeCellIndex.withProgressGates.length;
+    var applicableEventCellTotal = globalCellIndex.withEventBattles.length + globalCellIndex.withProgressGates.length;
     var overallPercent = ((battlesComplete + gatesOpened) / applicableEventCellTotal) * 100;
     var overallPercentRounded = parseFloat(Math.round(overallPercent * 100) / 100).toFixed(2);
     currentTestProgress = {
@@ -829,16 +820,16 @@ function updateTestModePallet(){
 
     $testPalletBody.append('<tr class="cell-stats">'
         + '<td class="stat label"><strong>Cell Stats</strong></td>'
-        + '<td class="stat total"><label>Total:</label> <strong>'+testModeCellIndex.withContent.length+'</strong></td>'
-        + '<td class="stat paths"><label>w/ Paths</label> <strong>'+testModeCellIndex.withPaths.length+'</strong></td>'
-        + '<td class="stat battles"><label>w/ Battles</label> <strong>'+testModeCellIndex.withEventBattles.length+'</strong></td>'
-        + '<td class="stat gates"><label>w/ Gates</label> <strong>'+testModeCellIndex.withProgressGates.length+'</strong></td>'
+        + '<td class="stat total"><label>Total:</label> <strong>'+globalCellIndex.withContent.length+'</strong></td>'
+        + '<td class="stat paths"><label>w/ Paths</label> <strong>'+globalCellIndex.withPaths.length+'</strong></td>'
+        + '<td class="stat battles"><label>w/ Battles</label> <strong>'+globalCellIndex.withEventBattles.length+'</strong></td>'
+        + '<td class="stat gates"><label>w/ Gates</label> <strong>'+globalCellIndex.withProgressGates.length+'</strong></td>'
         + '</tr>');
 
     $testPalletBody.append('<tr class="test-progress">'
         + '<td class="stat label"><strong>Progress</strong></td>'
-        + '<td class="stat total"><label>Battles:</label> <strong>'+currentTestProgress.battlesComplete+' / '+testModeCellIndex.withEventBattles.length+'</strong></td>'
-        + '<td class="stat complete"><label>Gates:</label> <strong>'+currentTestProgress.gatesOpened+' / '+testModeCellIndex.withProgressGates.length+'</strong></td>'
+        + '<td class="stat total"><label>Battles:</label> <strong>'+currentTestProgress.battlesComplete+' / '+globalCellIndex.withEventBattles.length+'</strong></td>'
+        + '<td class="stat complete"><label>Gates:</label> <strong>'+currentTestProgress.gatesOpened+' / '+globalCellIndex.withProgressGates.length+'</strong></td>'
         + '<td class="stat percent" colspan="2"><label>Overall Percent:</label> <strong>'+currentTestProgress.overallPercentRounded+'%</strong></td>'
         + '</tr>');
 

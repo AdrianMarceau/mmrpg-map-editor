@@ -17,19 +17,33 @@ $map_pallet_rows = 2;
 $map_canvas_cols = 23;
 $map_canvas_rows = 16;
 
-// Include map layout data from the appropriate grid file
+// Start fresh with empty index arrays for paths, events, etc.
+$map_canvas_info = array();
 $map_canvas_paths = array();
 $map_canvas_events = array();
-if (file_exists('maps/map'.$this_map_id.'.php')){
-    $canvas_data_file = 'maps/map'.$this_map_id.'.php';
-    require($canvas_data_file);
+
+// Include map layout data from the appropriate grid file
+if (!empty($this_map_id)){
+    if (file_exists('maps/map'.$this_map_id.'.json')){
+        $canvas_data_file = 'maps/map'.$this_map_id.'.json';
+        load_map_data_from_json($canvas_data_file, $map_canvas_info, $map_canvas_paths, $map_canvas_events);
+    } elseif (file_exists('maps/map'.$this_map_id.'.php')){
+        $canvas_data_file = 'maps/map'.$this_map_id.'.php';
+        require($canvas_data_file);
+    } else {
+        header('Location: '.MMRPG_BASE_HREF);
+        exit();
+    }
+    //echo('<pre>$map_canvas_paths = '.print_r($map_canvas_paths, true).'</pre>'.PHP_EOL);
+    //echo('<pre>$map_canvas_events = '.print_r($map_canvas_events, true).'</pre>'.PHP_EOL);
+    //exit();
 }
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Overworld Test</title>
+    <title><?= !empty($map_canvas_info['name']) ? ucfirst($map_canvas_info['name']).' | ' : '' ?>Overworld Test</title>
     <link type="text/css" rel="stylesheet" href="styles/style.css?<?= MMRPG_CACHE_DATE ?>" />
     <style type="text/css"><?= $grid_object_styles ?></style>
 </head>
@@ -55,7 +69,7 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
 
     </div>
 
-    <div class="map" data-view="all" data-edit="">
+    <div class="map" data-view="all" data-edit="" data-name="<?= 'map'.$this_map_id ?>">
         <div class="wrapper">
             <?
 
@@ -102,7 +116,8 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
     </div>
 
     <div class="tools">
-        <textarea name="export" class="export" cols="60" rows="10" readonly="readonly"></textarea>
+        <textarea id="export-map-json" name="export" class="export" cols="60" rows="10" readonly="readonly"></textarea>
+        <button type="button" class="export" onclick="downloadExportMapAsFile()">Export Map as JSON</button>
     </div>
 
     <div class="version">
