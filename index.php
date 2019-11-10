@@ -27,9 +27,6 @@ if (!empty($this_map_id)){
     if (file_exists('maps/map'.$this_map_id.'.json')){
         $canvas_data_file = 'maps/map'.$this_map_id.'.json';
         load_map_data_from_json($canvas_data_file, $map_canvas_info, $map_canvas_paths, $map_canvas_events);
-    } elseif (file_exists('maps/map'.$this_map_id.'.php')){
-        $canvas_data_file = 'maps/map'.$this_map_id.'.php';
-        require($canvas_data_file);
     } else {
         header('Location: '.MMRPG_BASE_HREF);
         exit();
@@ -85,9 +82,10 @@ if (!empty($this_map_id)){
                 $pallet_sprites = array();
                 for ($row = 1; $row <= $map_pallet_rows; $row++){
                     for ($col = 1; $col <= $map_pallet_cols; $col++){
+                        $col_row = $col.'-'.$row;
                         if (!isset($option_list[$key])){ break 2; }
                         $path = $option_list[$key];
-                        $pallet_sprites[$col][$row] = $path;
+                        $pallet_sprites[$col_row] = $path;
                         $key++;
                     }
                 }

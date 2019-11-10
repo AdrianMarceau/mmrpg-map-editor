@@ -19,20 +19,16 @@ function load_map_data_from_json($canvas_data_file,
     // Load path data if it exists in the data object
     if (!empty($canvas_data_object['paths'])){
         foreach ($canvas_data_object['paths'] AS $col_row => $path_token){
-            if (!strstr($col_row, '-')){ continue; }
-            list($col, $row) = explode('-', $col_row);
-            $map_canvas_paths[$col][$row] = $path_token;
+            $map_canvas_paths[$col_row] = $path_token;
         }
     }
     // Load event data if it exists in the data object
     if (!empty($canvas_data_object['events'])){
         foreach ($canvas_data_object['events'] AS $col_row => $event_token){
-            if (!strstr($col_row, '-')){ continue; }
-            list($col, $row) = explode('-', $col_row);
-            $map_canvas_events[$col][$row] = $event_token;
+            $map_canvas_events[$col_row] = $event_token;
             if (!empty($canvas_data_object['fields'][$col_row])){
                 $field_token = $canvas_data_object['fields'][$col_row];
-                $map_canvas_events[$col][$row] .= '/'.$field_token;
+                $map_canvas_events[$col_row] .= '/'.$field_token;
             }
         }
     }
@@ -66,13 +62,15 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                 echo '<tr>';
                 for ($col = 1; $col <= $num_cols; $col++){
 
+                    $col_row = $col.'-'.$row;
+
                     $cell_markup = '';
-                    $cell_title = $col.'-'.$row;
+                    $cell_title = $col_row;
 
                     // Generate markup for any paths that appear in this cell
-                    if (isset($grid_sprites['paths'][$col][$row])){
+                    if (isset($grid_sprites['paths'][$col_row])){
 
-                        $path_data = $grid_sprites['paths'][$col][$row];
+                        $path_data = $grid_sprites['paths'][$col_row];
                         $path_data = strstr($path_data, '/') ? explode('/', $path_data) : array($path_data);
 
                         if (strstr($grid_class, 'pallet')){
@@ -86,9 +84,9 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                     }
 
                     // Generate markup for any events that appear in this cell
-                    if (isset($grid_sprites['events'][$col][$row])){
+                    if (isset($grid_sprites['events'][$col_row])){
 
-                        $event_data = $grid_sprites['events'][$col][$row];
+                        $event_data = $grid_sprites['events'][$col_row];
                         $event_data = strstr($event_data, '/') ? explode('/', $event_data) : array($event_data);
 
                         $field_type = '';
@@ -118,9 +116,9 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                     }
 
                     // Generate markup for any field that appear in this cell
-                    if (isset($grid_sprites['fields'][$col][$row])){
+                    if (isset($grid_sprites['fields'][$col_row])){
 
-                        $field_data = $grid_sprites['fields'][$col][$row];
+                        $field_data = $grid_sprites['fields'][$col_row];
                         $field_data = strstr($field_data, '/') ? explode('/', $field_data) : array($field_data);
 
                         $field_class = 'battle-boss';
