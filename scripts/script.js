@@ -67,9 +67,11 @@ $(document).ready(function(){
         e.preventDefault();
         var $button = $(this);
         if ($button.hasClass('disabled')){ return false; }
+        var oldView = $map.attr('data-view');
         var view = $button.attr('data-view');
         $('.button[data-view]', $views).removeClass('active');
         $button.addClass('active');
+        if (oldView === 'test' && view !== 'test'){ exitTestMode(); }
         $map.attr('data-view', view);
         if (view != 'all'){
             $map.attr('data-edit', view);
@@ -82,6 +84,7 @@ $(document).ready(function(){
             } else {
             $map.attr('data-edit', '');
             }
+        if (view === 'test'){ enterTestMode(); }
         });
 
     // Define the click events for PALLET CELLS
@@ -139,9 +142,9 @@ function shiftSprites(dir){
 // Define a function for shifting all canvas sprites left
 function shiftSpritesLeft(){
     if (!canShiftMap('left')){ return false; }
-    var start = 2;
+    var origin = 2;
     var stop = gridSize.cols;
-    for (var col = start; col <= stop; col++){
+    for (var col = origin; col <= stop; col++){
         var newCol = col - 1;
         $sprites = getCellSpritesByCol(col);
         $sprites.each(function(){
@@ -158,9 +161,9 @@ function shiftSpritesLeft(){
 // Define a function for shifting all canvas sprites right
 function shiftSpritesRight(){
     if (!canShiftMap('right')){ return false; }
-    var start = gridSize.cols - 1;
+    var origin = gridSize.cols - 1;
     var stop = 1;
-    for (var col = start; col >= stop; col--){
+    for (var col = origin; col >= stop; col--){
         var newCol = col + 1;
         $sprites = getCellSpritesByCol(col);
         $sprites.each(function(){
@@ -177,9 +180,9 @@ function shiftSpritesRight(){
 // Define a function for shifting all canvas sprites up
 function shiftSpritesUp(){
     if (!canShiftMap('up')){ return false; }
-    var start = 2;
+    var origin = 2;
     var stop = gridSize.rows;
-    for (var row = start; row <= stop; row++){
+    for (var row = origin; row <= stop; row++){
         var newRow = row - 1;
         $sprites = getCellSpritesByRow(row);
         $sprites.each(function(){
@@ -196,9 +199,9 @@ function shiftSpritesUp(){
 // Define a function for shifting all canvas sprites down
 function shiftSpritesDown(){
     if (!canShiftMap('down')){ return false; }
-    var start = gridSize.rows - 1;
+    var origin = gridSize.rows - 1;
     var stop = 1;
-    for (var row = start; row >= stop; row--){
+    for (var row = origin; row >= stop; row--){
         var newRow = row + 1;
         $sprites = getCellSpritesByRow(row);
         $sprites.each(function(){
@@ -292,7 +295,7 @@ function changeCellPath($cell, newPath, exportMap){
 
 // Define a function for editing cell's event to something else
 function changeCellEvent($cell, newEvent, exportMap){
-    console.log('changeCellEvent', newEvent, exportMap || false);
+    //console.log('changeCellEvent', newEvent, exportMap || false);
 
     // Compensate for missing function arguments or break if required
     if (typeof $cell !== 'object'){ return false; }
@@ -306,27 +309,37 @@ function changeCellEvent($cell, newEvent, exportMap){
     var newEvent = newEvent.length ? newEvent : palletCurrent['events'];
     if ($event.length){ $event.remove(); }
     if ($field.length){ $field.remove(); }
-    console.log('currEvent = ', currEvent, 'newEvent = ', newEvent);
+    //console.log('currEvent = ', currEvent, 'newEvent = ', newEvent);
 
-    // If this was a 'start' panel, automatically remove any existing
-    if (newEvent === 'start'){
-        console.log('newEvent === start | remove prev sprite');
-        $startEvent = $('.cell[data-col][data-row] .sprite[data-event="start"]', $canvas);
-        console.log('$startEvent =', $startEvent.length, $startEvent);
-        if ($startEvent.length){ $startEvent.parent().empty(); }
+    // If this was a 'origin' or 'destination' panel, ALLOW ONLY ONE and automatically remove any existing
+    if (newEvent === 'origin'){
+        //console.log('newEvent === origin | remove prev sprite');
+        $originEvent = $('.cell[data-col][data-row] .sprite[data-event="origin"]', $canvas);
+        //console.log('$originEvent =', $originEvent.length, $originEvent);
+        if ($originEvent.length){ $originEvent.parent().find('.sprite:not(.path)').remove(); }
+    } else if (newEvent === 'destination'){
+        //console.log('newEvent === destination | remove prev sprite');
+        $destinationEvent = $('.cell[data-col][data-row] .sprite[data-event="destination"]', $canvas);
+        //console.log('$destinationEvent =', $destinationEvent.length, $destinationEvent);
+        if ($destinationEvent.length){ $destinationEvent.parent().find('.sprite:not(.path)').remove(); }
     }
 
     // Generate the markup for the next event, with or without field image
     var newFieldType = '';
-    if (newEvent !== 'start'){
+    if (newEvent !== 'origin'
+        && newEvent !== 'destination'
+        && newEvent.indexOf('progress-gate-') === -1){
         var newField = palletCurrent['fields'];
         var newFieldData = typeof mmrpgFieldIndex[newField] !== 'undefined' ? mmrpgFieldIndex[newField] : {};
         newFieldType = typeof newFieldData.type !== 'undefined' && newFieldData.type.length > 0 ? newFieldData.type : 'none';
         }
     if (!(currEvent.length && currEvent === newEvent)){
-        if (newEvent !== 'start'){
-            var fieldImage = baseAssetHref+'images/fields/'+newField+'/battle-field_avatar.png';
-            $field = $('<img class="sprite field '+newEvent+' '+newField+'" data-field="'+newField+'" data-type="'+newFieldType+'" src="'+fieldImage+'" />');
+        if (newEvent !== 'origin'
+            && newEvent !== 'destination'
+        && newEvent.indexOf('progress-gate-') === -1){
+            //var fieldImage = baseAssetHref+'images/fields/'+newField+'/battle-field_avatar.png';
+            //$field = $('<img class="sprite field '+newEvent+' '+newField+'" data-field="'+newField+'" data-type="'+newFieldType+'" src="'+fieldImage+'" />');
+            $field = $('<div class="sprite field '+newEvent+' '+newField+'" data-field="'+newField+'" data-type="'+newFieldType+'"></div>');
             $field.appendTo($cell);
             }
         $event = $('<div class="sprite event '+newEvent+'" data-event="'+newEvent+'" data-type="'+newFieldType+'"></div>');
@@ -340,7 +353,7 @@ function changeCellEvent($cell, newEvent, exportMap){
 
 // Define a function for editing cell's field to something else
 function changeCellField($cell, newField, exportMap){
-    console.log('changeCellField', newField, exportMap || false);
+    //console.log('changeCellField', newField, exportMap || false);
 
     // Compensate for missing function arguments or break if required
     if (typeof $cell !== 'object'){ return false; }
@@ -355,15 +368,17 @@ function changeCellField($cell, newField, exportMap){
         // Remove the previous field and prepend a new one
         $field.remove();
         var eventToken = $event.attr('data-event');
-        console.log('eventToken = ', eventToken);
-        if (eventToken === 'start'){
+        //console.log('eventToken = ', eventToken);
+        if (eventToken === 'origin'
+            || eventToken === 'destination'
+            || eventToken.indexOf('progress-gate-') !== -1){
             $event.attr('data-type', '');
         } else {
             var fieldToken = newField.length ? newField : palletCurrent['fields'];
             var fieldData = typeof mmrpgFieldIndex[fieldToken] !== 'undefined' ? mmrpgFieldIndex[fieldToken] : {};
             var fieldImage = baseAssetHref+'images/fields/'+fieldToken+'/battle-field_avatar.png';
             var fieldType = typeof fieldData.type !== 'undefined' && fieldData.type.length > 0 ? fieldData.type : 'none';
-            console.log('fieldToken = ', fieldToken, 'fieldType = ', fieldType, 'fieldData = ', fieldData);
+            //console.log('fieldToken = ', fieldToken, 'fieldType = ', fieldType, 'fieldData = ', fieldData);
             $field = $('<img class="sprite field '+eventToken+' '+fieldToken+'" data-field="'+fieldToken+'" data-type="'+fieldType+'" src="'+fieldImage+'" />');
             $field.insertBefore($event);
             $event.attr('data-type', fieldType);
@@ -407,6 +422,9 @@ function exportMap(){
             var eventToken = $event.attr('data-event');
             var fieldToken = $field.attr('data-field');
             mapEvents.push('$map_canvas_events['+col+']['+row+'] = \''+eventToken+'/'+fieldToken+'\';');
+            } else if ($event.length){
+            var eventToken = $event.attr('data-event');
+            mapEvents.push('$map_canvas_events['+col+']['+row+'] = \''+eventToken+'\';');
             }
 
         });
@@ -432,10 +450,11 @@ function exportMap(){
 
     $export.animate({borderColor:'green'},600,'swing', function(){ $(this).css({borderColor:''}); });
 
-    // If a start markup is visible, allow the user to TEST their creation
+    // If an origin and destination have been defined, allow the user to TEST their creation
     var $testViewButton = $('.button[data-view="test"]', $views);
-    var hasStartEvent = $('.cell[data-col][data-row] .sprite[data-event="start"]', $canvas).length ? true : false;
-    if (hasStartEvent && mapEvents.length > 1){ $testViewButton.removeClass('disabled'); }
+    var hasOriginEvent = $('.cell[data-col][data-row] .sprite[data-event="origin"]', $canvas).length ? true : false;
+    var hasDestinationEvent = $('.cell[data-col][data-row] .sprite[data-event="destination"]', $canvas).length ? true : false;
+    if (hasOriginEvent && hasDestinationEvent && mapEvents.length > 2){ $testViewButton.removeClass('disabled'); }
     else { $testViewButton.addClass('disabled'); }
 
 }
@@ -445,4 +464,400 @@ var exportMapTimeout;
 function queueExportMap(){
     if (typeof exportMapTimeout !== 'undefined'){ clearTimeout(exportMapTimeout); }
     exportMapTimeout = setTimeout(function(){ exportMap(); }, 300);
+}
+
+
+
+// -- TEST MODE PROGRAMMING -- //
+
+var testModeCellIndex = {};
+var completedEventCells = [];
+var allowedEventCells = [];
+var $testMap = false;
+var $testCanvas = false;
+var $testPallets = false;
+var $testCanvasCells = false;
+var $originCell = false;
+var orginClickTimeout = false;
+var originCellPosition = false;
+var $destinationCell = false;
+var destinationCellPosition = false;
+var completedEventCellsCount = 0;
+var totalEventCellsCount = 0;
+var percentComplete = 0;
+var currentTestProgress = {};
+function enterTestMode(){
+    //console.log('enterTestMode()');
+    resetTestModeVariables();
+    reindexTestCellContents();
+    recalculateAllowedEventCells();
+    recalculateTestProgress();
+    updateCellsWithTestModeProgress();
+    generateTestModeEvents();
+    updateTestModePallet();
+
+    /*
+    // Auto click the origin cell
+    if (orginClickTimeout !== false){ clearTimeout(orginClickTimeout); }
+    orginClickTimeout = setTimeout(function(){
+        $testCanvasCells.find('.sprite.event.origin').parent().trigger('click');
+        }, 2000);
+    */
+
+    //console.log('completedEventCells =', completedEventCells);
+    //console.log('allowedEventCells =', allowedEventCells);
+}
+function exitTestMode(){
+    //console.log('exitTestMode()');
+    resetTestModeVariables();
+}
+function resetTestModeVariables(){
+    //console.log('resetTestModeVariables()');
+    testModeCellIndex = {};
+    completedEventCells = [];
+    allowedEventCells = [];
+    completedEventCellsCount = 0;
+    totalEventCellsCount = 0;
+    percentComplete = 0;
+    $testMap = $('.map[data-view="test"]');
+    $testCanvas = $('.grid.canvas', $testMap);
+    $testPallets = $('.grid.pallet', $testMap);
+    $testCanvasCells = $('.cell[data-col][data-row]', $testCanvas);
+    $originCell = $testCanvasCells.find('.sprite.origin').parent();
+    $destinationCell = $testCanvasCells.find('.sprite.destination').parent();
+    originCellPosition = $originCell.attr('data-col')+'-'+$originCell.attr('data-row');
+    destinationCellPosition = $destinationCell.attr('data-col')+'-'+$destinationCell.attr('data-row');
+    $('.cell[data-col][data-row]', $testCanvas)
+        .removeClass('locked')
+        .removeClass('allowed')
+        .removeClass('completed')
+        ;
+    //console.log('cells = ', $testCanvasCells.length);
+}
+function preloadAllowedEventCells(){
+    //console.log('preloadAllowedEventCells()');
+    $originEvent = $('.cell[data-col][data-row] .sprite[data-event="origin"]', $testCanvas);
+    if ($originEvent.length){ $cell = $originEvent.parent(); allowedEventCells.push($cell.attr('data-col')+'-'+$cell.attr('data-row')); }
+}
+function preloadCompletedEventCells(){
+    //console.log('preloadCompletedEventCells()');
+}
+function reindexTestCellContents(){
+    //console.log('reindexTestCellContents()');
+
+    var cellIndex = {};
+    var originCellPosition = '';
+    var destinationCellPosition = '';
+    var cellsWithContent = [];
+    var cellsWithPaths = [];
+    var cellsWithEvents = [];
+    var cellsWithEventBattles = [];
+    var cellsWithEventFields = [];
+    var cellsWithProgressGates = [];
+
+    $testCanvasCells.each(function(){
+        var $cell = $(this);
+        var $cellSprites = $('.sprite', $cell);
+        var cellPosition = $cell.attr('data-col')+'-'+$cell.attr('data-row');
+        if ($cellSprites.length > 0){
+            var cellContent = {};
+            var $pathSprite = $cellSprites.filter('.path');
+            var $eventSprite = $cellSprites.filter('.event');
+            var $fieldSprite = $cellSprites.filter('.field');
+            cellsWithContent.push(cellPosition);
+            if ($pathSprite.length > 0){
+                cellContent.path = $pathSprite.attr('data-path');
+                cellsWithPaths.push(cellPosition);
+                }
+            if ($eventSprite.length > 0){
+                cellContent.event = $eventSprite.attr('data-event');
+                cellsWithEvents.push(cellPosition);
+                if (cellContent.event === 'origin'){ originCellPosition = cellPosition; }
+                else if (cellContent.event === 'destination'){ destinationCellPosition = cellPosition; }
+                else if (cellContent.event.indexOf('battle-') !== -1){ cellsWithEventBattles.push(cellPosition); }
+                else if (cellContent.event.indexOf('progress-gate-') !== -1){ cellsWithProgressGates.push(cellPosition); }
+                }
+            if ($fieldSprite.length > 0){
+                cellContent.field = $fieldSprite.attr('data-field');
+                cellsWithPaths.push(cellPosition);
+                }
+            cellIndex[cellPosition] = cellContent;
+            }
+        });
+
+    testModeCellIndex = {
+        index: cellIndex,
+        origin: originCellPosition,
+        destination: destinationCellPosition,
+        withContent: cellsWithContent,
+        withPaths: cellsWithPaths,
+        withEvents: cellsWithEvents,
+        withEventBattles: cellsWithEventBattles,
+        withProgressGates: cellsWithProgressGates,
+        };
+
+    //console.log('testModeCellIndex = ', testModeCellIndex);
+
+    //console.log('MAP JSON testModeCellIndex.index = ', JSON.stringify(testModeCellIndex.index));
+
+    //exportCellIndexAsJSON();
+
+}
+function exportCellIndexAsJSON(){
+
+    var jsonPaths = {};
+    var jsonEvents = {};
+    var jsonFields = {};
+
+    var testModeCellKeys = Object.keys(testModeCellIndex.index);
+    for (var i = 0; i < testModeCellKeys.length; i++){
+        var cellPosition = testModeCellKeys[i];
+        var cellData = testModeCellIndex.index[cellPosition];
+        if (typeof cellData.path !== 'undefined'){ jsonPaths[cellPosition] = cellData.path; }
+        if (typeof cellData.event !== 'undefined'){ jsonEvents[cellPosition] = cellData.event; }
+        if (typeof cellData.field !== 'undefined'){ jsonFields[cellPosition] = cellData.field; }
+        }
+
+    var jsonDataIndex = {
+        paths: jsonPaths,
+        events: jsonEvents,
+        fields: jsonFields
+        };
+
+    var jsonDataIndexString = JSON.stringify(jsonDataIndex);
+
+    //console.log('MAP JSON jsonDataIndexString = ', jsonDataIndexString);
+
+    return jsonDataIndexString;
+
+}
+function recalculateAllowedEventCells(){
+    //console.log('calculateCompletedEventCells()');
+    allowedEventCells = [];
+    preloadAllowedEventCells();
+    preloadCompletedEventCells();
+    allowedEventCells.push.apply(allowedEventCells, completedEventCells);
+    for (var i = 0; i < completedEventCells.length; i++){
+        var completedCell = completedEventCells[i].split('-');
+        var completedCellCol = parseInt(completedCell[0]);
+        var completedCellRow = parseInt(completedCell[1]);
+        // Allow the non-empty cells on all four sides of this one
+        var abovePosition = completedCellCol+'-'+(completedCellRow - 1); // above (-1 row)
+        var belowPosition = completedCellCol+'-'+(completedCellRow + 1); // below (+1 row)
+        var leftPosition = (completedCellCol - 1)+'-'+completedCellRow; // left (-1 col)
+        var rightPosition = (completedCellCol + 1)+'-'+completedCellRow; // right (+1 col)
+        if (testModeCellIndex.withContent.indexOf(abovePosition) !== -1){ allowedEventCells.push(abovePosition); }
+        if (testModeCellIndex.withContent.indexOf(belowPosition) !== -1){ allowedEventCells.push(belowPosition); }
+        if (testModeCellIndex.withContent.indexOf(leftPosition) !== -1){ allowedEventCells.push(leftPosition); }
+        if (testModeCellIndex.withContent.indexOf(rightPosition) !== -1){ allowedEventCells.push(rightPosition); }
+        }
+}
+var autoClickInProgress = false;
+var autoClickTimeout = false;
+var $queuedCellsToBeClicked = [];
+function autoClickQueuedCells(){
+    //console.log('autoClickQueuedCells()', $queuedCellsToBeClicked.length);
+    if ($queuedCellsToBeClicked.length > 0){
+        if (autoClickTimeout !== false){ clearTimeout(autoClickTimeout); }
+        autoClickTimeout = setTimeout(function(){
+            var $clickCell = $queuedCellsToBeClicked.shift();
+            //console.log('$clickCell =', $clickCell.attr('data-col-row'));
+            testCellClickFunction($clickCell);
+            autoClickQueuedCells();
+            }, 500);
+        autoClickInProgress = true;
+        } else {
+        //console.log('no more click cells');
+        autoClickInProgress = false;
+        }
+}
+function autoCompleteAdjacentPathOnlyCells(completedCellToken){
+    //console.log('autoCompleteAdjacentPathOnlyCells()', completedCellToken);
+
+    var completedCell = completedCellToken.split('-');
+    var completedCellCol = parseInt(completedCell[0]);
+    var completedCellRow = parseInt(completedCell[1]);
+
+    var abovePosition = completedCellCol+'-'+(completedCellRow - 1); // above (-1 row)
+    var $aboveCell = $testCanvasCells.filter('[data-col-row="'+abovePosition+'"]'); // above (-1 row)
+    if ($aboveCell.length
+        && completedEventCells.indexOf(abovePosition) === -1
+        && !$aboveCell.find('.sprite.event').length
+        && !$aboveCell.is(':empty')){
+        $queuedCellsToBeClicked.push($aboveCell);
+        }
+
+    var belowPosition = completedCellCol+'-'+(completedCellRow + 1); // below (+1 row)
+    var $belowCell = $testCanvasCells.filter('[data-col-row="'+belowPosition+'"]'); // below (+1 row)
+    if ($belowCell.length
+        && completedEventCells.indexOf(belowPosition) === -1
+        && !$belowCell.find('.sprite.event').length
+        && !$belowCell.is(':empty')){
+        $queuedCellsToBeClicked.push($belowCell);
+        }
+
+    var leftPosition = (completedCellCol - 1)+'-'+completedCellRow; // left (-1 col)
+    var $leftCell = $testCanvasCells.filter('[data-col-row="'+leftPosition+'"]'); // left (-1 col)
+    if ($leftCell.length
+        && completedEventCells.indexOf(leftPosition) === -1
+        && !$leftCell.find('.sprite.event').length
+        && !$leftCell.is(':empty')){
+        $queuedCellsToBeClicked.push($leftCell);
+        }
+
+    var rightPosition = (completedCellCol + 1)+'-'+completedCellRow; // right (+1 col)
+    var $rightCell = $testCanvasCells.filter('[data-col-row="'+rightPosition+'"]'); // right (+1 col)
+    if ($rightCell.length
+        && completedEventCells.indexOf(rightPosition) === -1
+        && !$rightCell.find('.sprite.event').length
+        && !$rightCell.is(':empty')){
+        $queuedCellsToBeClicked.push($rightCell);
+        }
+
+    /*
+    console.log({
+        trigger: completedCellToken,
+        above: [abovePosition, $aboveCell.length, $aboveCell.find('.sprite.event').length, $aboveCell.find('.sprite.path').length],
+        below: [belowPosition, $belowCell.length, $belowCell.find('.sprite.event').length, $belowCell.find('.sprite.path').length],
+        left: [leftPosition, $leftCell.length, $leftCell.find('.sprite.event').length, $leftCell.find('.sprite.path').length],
+        right: [rightPosition, $rightCell.length, $rightCell.find('.sprite.event').length, $rightCell.find('.sprite.path').length],
+        queuedCells: [$queuedCellsToBeClicked.length, $queuedCellsToBeClicked.map(function(a){ return a.attr('data-col-row'); })]
+        });
+    */
+
+    autoClickQueuedCells();
+}
+function updateCellsWithTestModeProgress(){
+    //console.log('updateCellsWithTestModeProgress()');
+    $testCanvasCells
+        .addClass('locked')
+        .removeClass('allowed');
+    for (var i = 0; i < completedEventCells.length; i++){
+        var completedCell = completedEventCells[i].split('-');
+        var completedCellCol = parseInt(completedCell[0]);
+        var completedCellRow = parseInt(completedCell[1]);
+        $testCanvasCells
+            .filter('[data-col="'+completedCellCol+'"][data-row="'+completedCellRow+'"]')
+            .addClass('completed')
+            ;
+    }
+    for (var i = 0; i < allowedEventCells.length; i++){
+        var allowedCell = allowedEventCells[i].split('-');
+        var allowedCellCol = parseInt(allowedCell[0]);
+        var allowedCellRow = parseInt(allowedCell[1]);
+        $testCanvasCells
+            .filter('[data-col="'+allowedCellCol+'"][data-row="'+allowedCellRow+'"]')
+            .removeClass('locked')
+            .addClass('allowed')
+            ;
+    }
+}
+var generateTestModeEventsFlag = false;
+function generateTestModeEvents(){
+    //console.log('generateTestModeEvents()');
+    if (generateTestModeEventsFlag === true){ return; }
+    else { generateTestModeEventsFlag = true; }
+    $testCanvasCells.bind('click', function(e){
+        e.preventDefault();
+        var $testCell = $(this);
+        if (!autoClickInProgress){
+            testCellClickFunction($testCell, true);
+            } else {
+            $queuedCellsToBeClicked.push($testCell);
+            //console.log('preventing an auto-click of ', $testCell.attr('data-col-row'));
+            }
+        });
+}
+function testCellClickFunction($testCell, triggeredByUser){
+    if (typeof triggeredByUser !== 'boolean'){ triggeredByUser = false; }
+    if ($testMap.attr('data-view') === 'test'){
+        var cellToken = $testCell.attr('data-col')+'-'+$testCell.attr('data-row');
+        if (!$testCell.hasClass('locked')){
+            //console.log('click an allowed cell to complete it!');
+            if (testModeCellIndex.withContent.indexOf(cellToken) !== -1
+                && completedEventCells.indexOf(cellToken) === -1){
+                var allowComplete = true;
+                var $pathSprite = $testCell.find('.sprite.path');
+                var $eventSprite = $testCell.find('.sprite.event');
+                var eventKind = $eventSprite.length > 0 ? $eventSprite.attr('data-event') : '';
+                //console.log('eventKind = ', eventKind);
+                if (eventKind.indexOf('progress-gate-') !== -1){
+                    var progressGateLevel = parseInt(eventKind.split('-')[2]);
+                    //console.log('currentTestProgress.overallPercent = ', currentTestProgress.overallPercent);
+                    //console.log('progressGateLevel = ', progressGateLevel);
+                    if (currentTestProgress.overallPercent < progressGateLevel){ allowComplete = false; }
+                    } else if (!$pathSprite.length){
+                    allowComplete = false;
+                    }
+                if (allowComplete){
+                    completedEventCells.push(cellToken);
+                    recalculateAllowedEventCells();
+                    recalculateTestProgress();
+                    updateCellsWithTestModeProgress();
+                    updateTestModePallet();
+                    autoCompleteAdjacentPathOnlyCells(cellToken);
+                    return true;
+                    }
+                }
+            }
+        }
+    return false;
+}
+function recalculateTestProgress(){
+    var battlesComplete = 0;
+    var gatesOpened = 0;
+    for (var i = 0; i < completedEventCells.length; i++){
+        var completedCell = completedEventCells[i];
+        if (testModeCellIndex.withEventBattles.indexOf(completedCell) !== -1){ battlesComplete++; }
+        else if (testModeCellIndex.withProgressGates.indexOf(completedCell) !== -1){ gatesOpened++; }
+        }
+    var applicableEventCellTotal = testModeCellIndex.withEventBattles.length + testModeCellIndex.withProgressGates.length;
+    var overallPercent = ((battlesComplete + gatesOpened) / applicableEventCellTotal) * 100;
+    var overallPercentRounded = parseFloat(Math.round(overallPercent * 100) / 100).toFixed(2);
+    currentTestProgress = {
+        battlesComplete: battlesComplete,
+        gatesOpened: gatesOpened,
+        overallPercent: overallPercent,
+        overallPercentRounded: overallPercentRounded
+        };
+    return currentTestProgress;
+}
+function updateTestModePallet(){
+    //console.log('updateTestModePallet()');
+    var $testPalletBody = $testPallets.filter('.test').find('tbody');
+    $testPalletBody.empty();
+
+    $testPalletBody.append('<tr class="cell-stats">'
+        + '<td class="stat label"><strong>Cell Stats</strong></td>'
+        + '<td class="stat total"><label>Total:</label> <strong>'+testModeCellIndex.withContent.length+'</strong></td>'
+        + '<td class="stat paths"><label>w/ Paths</label> <strong>'+testModeCellIndex.withPaths.length+'</strong></td>'
+        + '<td class="stat battles"><label>w/ Battles</label> <strong>'+testModeCellIndex.withEventBattles.length+'</strong></td>'
+        + '<td class="stat gates"><label>w/ Gates</label> <strong>'+testModeCellIndex.withProgressGates.length+'</strong></td>'
+        + '</tr>');
+
+    $testPalletBody.append('<tr class="test-progress">'
+        + '<td class="stat label"><strong>Progress</strong></td>'
+        + '<td class="stat total"><label>Battles:</label> <strong>'+currentTestProgress.battlesComplete+' / '+testModeCellIndex.withEventBattles.length+'</strong></td>'
+        + '<td class="stat complete"><label>Gates:</label> <strong>'+currentTestProgress.gatesOpened+' / '+testModeCellIndex.withProgressGates.length+'</strong></td>'
+        + '<td class="stat percent" colspan="2"><label>Overall Percent:</label> <strong>'+currentTestProgress.overallPercentRounded+'%</strong></td>'
+        + '</tr>');
+
+    /*
+    $testPalletBody.append('<tr>'
+        + '<td class="stat completed"><label>Battles Complete:</label> <strong>'+completedEventCellsCount+'</strong></td>'
+        + '<td class="stat total"><label>Battles Total:</label> <strong>'+totalEventCellsCount+'</strong></td>'
+        + '<td class="stat progress"><label>Battle Progress:</label> <strong>'+Math.ceil(percentComplete)+'%</strong></td>'
+        //+ '<td class="stat allowed"><label>Allowed</label> <strong>'+allowedEventCells.length+'</strong></td>'
+        + '<td class="stat progress"><label>Battle Progress:</label> <strong>'+Math.ceil(percentComplete)+'%</strong></td>'
+        + '<td class="stat total"><label>Cells w/ Events:</label> <strong>'+totalEventCellsCount+'</strong></td>'
+        + '</tr>');
+
+    $testPalletBody.append('<tr>'
+        + '<td class="stat completed"><label>Complete:</label> <strong>'+completedEventCellsCount+'</strong></td>'
+        + '<td class="stat total"><label>Total:</label> <strong>'+totalEventCellsCount+'</strong></td>'
+        //+ '<td class="stat allowed"><label>Allowed</label> <strong>'+allowedEventCells.length+'</strong></td>'
+        + '<td class="stat progress"><label>Progress:</label> <strong>'+Math.ceil(percentComplete)+'%</strong></td>'
+        + '<td class="stat total"><label>Total:</label> <strong>'+totalEventCellsCount+'</strong></td>'
+        + '</tr>');
+    */
 }

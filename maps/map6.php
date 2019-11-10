@@ -49,7 +49,8 @@ $map_canvas_paths[6][12] = 'v-line';
 $map_canvas_paths[6][13] = 'v-line';
 $map_canvas_paths[6][14] = 'b-stub';
 
-// Define the events that should appear on the map (x26)
+// Define the events that should appear on the map (x28)
+$map_canvas_events[6][2] = 'destination';
 $map_canvas_events[6][3] = 'battle-boss/final-destination-3';
 $map_canvas_events[6][4] = 'battle-mecha/final-destination-3';
 $map_canvas_events[3][5] = 'battle-mecha/oil-wells';
@@ -76,5 +77,6 @@ $map_canvas_events[8][11] = 'battle-mecha/mountain-mines';
 $map_canvas_events[9][11] = 'battle-mecha/mountain-mines';
 $map_canvas_events[6][12] = 'battle-master/intro-field';
 $map_canvas_events[6][13] = 'battle-mecha/intro-field';
+$map_canvas_events[6][14] = 'origin';
 
 ?>

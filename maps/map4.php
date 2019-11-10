@@ -1,12 +1,11 @@
 <?php
 
-// Define the paths that should appear on the map (x54)
+// Define the paths that should appear on the map (x73)
 $map_canvas_paths[2][2] = 't-stub';
-$map_canvas_paths[14][2] = 't-stub';
 $map_canvas_paths[2][3] = 'v-line';
-$map_canvas_paths[13][3] = 'l-stub';
-$map_canvas_paths[14][3] = 'cross';
-$map_canvas_paths[15][3] = 'r-stub';
+$map_canvas_paths[14][3] = 'tl-joint';
+$map_canvas_paths[15][3] = 'h-line';
+$map_canvas_paths[16][3] = 'tr-joint';
 $map_canvas_paths[2][4] = 'bl-joint';
 $map_canvas_paths[3][4] = 'h-line';
 $map_canvas_paths[4][4] = 't-tee';
@@ -14,11 +13,16 @@ $map_canvas_paths[5][4] = 'h-line';
 $map_canvas_paths[6][4] = 'h-line';
 $map_canvas_paths[7][4] = 'tr-joint';
 $map_canvas_paths[14][4] = 'v-line';
+$map_canvas_paths[16][4] = 'bl-joint';
+$map_canvas_paths[17][4] = 'h-line';
+$map_canvas_paths[18][4] = 'h-line';
+$map_canvas_paths[19][4] = 'tr-joint';
 $map_canvas_paths[4][5] = 'v-line';
 $map_canvas_paths[7][5] = 'l-tee';
 $map_canvas_paths[8][5] = 'h-line';
 $map_canvas_paths[9][5] = 'r-stub';
 $map_canvas_paths[14][5] = 'v-line';
+$map_canvas_paths[19][5] = 'v-line';
 $map_canvas_paths[4][6] = 'v-line';
 $map_canvas_paths[7][6] = 'v-line';
 $map_canvas_paths[12][6] = 'l-stub';
@@ -26,6 +30,7 @@ $map_canvas_paths[13][6] = 'h-line';
 $map_canvas_paths[14][6] = 'cross';
 $map_canvas_paths[15][6] = 'h-line';
 $map_canvas_paths[16][6] = 'r-stub';
+$map_canvas_paths[19][6] = 'v-line';
 $map_canvas_paths[2][7] = 'l-stub';
 $map_canvas_paths[3][7] = 'h-line';
 $map_canvas_paths[4][7] = 'b-tee';
@@ -33,14 +38,17 @@ $map_canvas_paths[5][7] = 't-tee';
 $map_canvas_paths[6][7] = 'h-line';
 $map_canvas_paths[7][7] = 'br-joint';
 $map_canvas_paths[14][7] = 'v-line';
+$map_canvas_paths[19][7] = 'v-line';
 $map_canvas_paths[5][8] = 'v-line';
 $map_canvas_paths[12][8] = 'l-stub';
 $map_canvas_paths[13][8] = 'h-line';
 $map_canvas_paths[14][8] = 'cross';
 $map_canvas_paths[15][8] = 'h-line';
 $map_canvas_paths[16][8] = 'r-stub';
+$map_canvas_paths[19][8] = 'v-line';
 $map_canvas_paths[5][9] = 'v-line';
 $map_canvas_paths[14][9] = 'v-line';
+$map_canvas_paths[19][9] = 'v-line';
 $map_canvas_paths[5][10] = 'l-tee';
 $map_canvas_paths[6][10] = 'h-line';
 $map_canvas_paths[7][10] = 'h-line';
@@ -51,13 +59,26 @@ $map_canvas_paths[11][10] = 'h-line';
 $map_canvas_paths[12][10] = 't-tee';
 $map_canvas_paths[13][10] = 'h-line';
 $map_canvas_paths[14][10] = 'br-joint';
+$map_canvas_paths[19][10] = 'v-line';
 $map_canvas_paths[5][11] = 'v-line';
 $map_canvas_paths[9][11] = 'v-line';
+$map_canvas_paths[12][11] = 'v-line';
+$map_canvas_paths[19][11] = 'v-line';
 $map_canvas_paths[5][12] = 'b-stub';
 $map_canvas_paths[9][12] = 'b-stub';
+$map_canvas_paths[12][12] = 'bl-joint';
+$map_canvas_paths[13][12] = 'h-line';
+$map_canvas_paths[14][12] = 'h-line';
+$map_canvas_paths[15][12] = 'h-line';
+$map_canvas_paths[16][12] = 'h-line';
+$map_canvas_paths[17][12] = 'h-line';
+$map_canvas_paths[18][12] = 'h-line';
+$map_canvas_paths[19][12] = 'br-joint';
 
-// Define the events that should appear on the map (x21)
+// Define the events that should appear on the map (x24)
+$map_canvas_events[2][2] = 'origin';
 $map_canvas_events[14][3] = 'battle-boss/intro-field';
+$map_canvas_events[19][4] = 'destination';
 $map_canvas_events[7][5] = 'battle-mecha/abandoned-warehouse';
 $map_canvas_events[8][5] = 'battle-mecha/abandoned-warehouse';
 $map_canvas_events[9][5] = 'battle-master/abandoned-warehouse';
@@ -76,6 +97,7 @@ $map_canvas_events[5][10] = 'battle-mecha/mountain-mines';
 $map_canvas_events[9][10] = 'battle-mecha/steel-mill';
 $map_canvas_events[5][11] = 'battle-mecha/mountain-mines';
 $map_canvas_events[9][11] = 'battle-mecha/steel-mill';
+$map_canvas_events[12][11] = 'progress-gate-10';
 $map_canvas_events[5][12] = 'battle-master/mountain-mines';
 $map_canvas_events[9][12] = 'battle-master/steel-mill';
 

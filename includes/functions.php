@@ -37,6 +37,10 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                         $path_data = $grid_sprites['paths'][$col][$row];
                         $path_data = strstr($path_data, '/') ? explode('/', $path_data) : array($path_data);
 
+                        if (strstr($grid_class, 'pallet')){
+                            $cell_title = $path_data[0];
+                        }
+
                         $path_class = $path_data[0];
                         $path_token = $path_data[0];
                         $cell_markup .= '<div class="sprite path '.$path_class.'" data-path="'.$path_token.'"></div>';
@@ -49,15 +53,25 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                         $event_data = $grid_sprites['events'][$col][$row];
                         $event_data = strstr($event_data, '/') ? explode('/', $event_data) : array($event_data);
 
-                        $field_class = $event_data[0];
-                        $field_token = isset($event_data[1]) ? $event_data[1] : $map_options['fields'][0];
-                        if (!isset($api_field_index[$field_token])){ $field_token = 'intro-field'; }
-                        $field_data = !empty($api_field_index[$field_token]) ? $api_field_index[$field_token] : array();
-                        if (empty($field_data)){ continue; }
-                        $field_type = !empty($field_data['type']) ? $field_data['type'] : 'none';
-                        $field_image = MMRPG_BASE_ASSET_HREF.'images/fields/'.$field_token.'/battle-field_avatar.png';
-                        $cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'" src="'.$field_image.'" />';
-                        $cell_title .= ' | '.$field_token;
+                        $field_type = '';
+                        if ($event_data[0] !== 'origin'
+                            && $event_data[0] !== 'destination'
+                            && !strstr($event_data[0], 'progress-gate-')){
+                            $field_class = $event_data[0];
+                            $field_token = isset($event_data[1]) ? $event_data[1] : $map_options['fields'][0];
+                            if (!isset($api_field_index[$field_token])){ $field_token = 'intro-field'; }
+                            $field_info = !empty($api_field_index[$field_token]) ? $api_field_index[$field_token] : array();
+                            if (empty($field_info)){ continue; }
+                            $field_type = !empty($field_info['type']) ? $field_info['type'] : 'none';
+                            $field_image = MMRPG_BASE_ASSET_HREF.'images/fields/'.$field_token.'/battle-field_avatar.png';
+                            //$cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'" src="'.$field_image.'" />';
+                            $cell_markup .= '<div class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'"></div>';
+                            $cell_title .= ' | '.$field_token;
+                        }
+
+                        if (strstr($grid_class, 'pallet')){
+                            $cell_title = $event_data[0];
+                        }
 
                         $event_class = $event_data[0];
                         $event_token = $event_data[0];
@@ -74,17 +88,22 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                         $field_class = 'battle-boss';
                         $field_token = $field_data[0];
                         if (!isset($api_field_index[$field_token])){ $field_token = 'intro-field'; }
-                        $field_data = !empty($api_field_index[$field_token]) ? $api_field_index[$field_token] : array();
-                        if (empty($field_data)){ continue; }
-                        $field_type = !empty($field_data['type']) ? $field_data['type'] : 'none';
+                        $field_info = !empty($api_field_index[$field_token]) ? $api_field_index[$field_token] : array();
+                        if (empty($field_info)){ continue; }
+                        $field_type = !empty($field_info['type']) ? $field_info['type'] : 'none';
                         $field_image = MMRPG_BASE_ASSET_HREF.'images/fields/'.$field_token.'/battle-field_avatar.png';
-                        $cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'" src="'.$field_image.'" />';
+                        //$cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'" src="'.$field_image.'" />';
+                        $cell_markup .= '<div class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'"></div>';
                         $cell_title .= ' | '.$field_token;
+
+                        if (strstr($grid_class, 'pallet')){
+                            $cell_title = $field_data[0];
+                        }
 
                     }
 
                     echo '<td title="'.$cell_title.'">';
-                        echo '<div class="cell" data-col="'.$col.'" data-row="'.$row.'">'.$cell_markup.'</div>';
+                        echo '<div class="cell" data-col="'.$col.'" data-row="'.$row.'" data-col-row="'.$col.'-'.$row.'">'.$cell_markup.'</div>';
                     echo '</td>';
 
                 }

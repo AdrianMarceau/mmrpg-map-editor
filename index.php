@@ -86,6 +86,10 @@ if (file_exists('maps/map'.$this_map_id.'.php')){
 
             }
 
+            // Print out an empty pallet as a test-area placeholder
+            $grid_class = 'pallet test';
+            echo generate_map_grid($map_pallet_cols, $map_pallet_rows, $grid_class);
+
             // Print out the canvas with the actual map grid's sprites, if any
             $grid_class = 'canvas';
             echo generate_map_grid($map_canvas_cols, $map_canvas_rows, $grid_class, array(

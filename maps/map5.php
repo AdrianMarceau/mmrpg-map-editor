@@ -1,6 +1,6 @@
 <?php
 
-// Define the paths that should appear on the map (x67)
+// Define the paths that should appear on the map (x69)
 $map_canvas_paths[6][2] = 't-stub';
 $map_canvas_paths[9][2] = 't-stub';
 $map_canvas_paths[12][2] = 't-stub';
@@ -28,7 +28,8 @@ $map_canvas_paths[15][5] = 'cross';
 $map_canvas_paths[16][5] = 'h-line';
 $map_canvas_paths[17][5] = 'tr-joint';
 $map_canvas_paths[21][5] = 't-stub';
-$map_canvas_paths[2][6] = 'l-stub';
+$map_canvas_paths[1][6] = 'l-stub';
+$map_canvas_paths[2][6] = 'h-line';
 $map_canvas_paths[3][6] = 'h-line';
 $map_canvas_paths[4][6] = 'r-tee';
 $map_canvas_paths[6][6] = 'v-line';
@@ -40,7 +41,8 @@ $map_canvas_paths[18][6] = 'h-line';
 $map_canvas_paths[19][6] = 'h-line';
 $map_canvas_paths[20][6] = 'h-line';
 $map_canvas_paths[21][6] = 'cross';
-$map_canvas_paths[22][6] = 'r-stub';
+$map_canvas_paths[22][6] = 'h-line';
+$map_canvas_paths[23][6] = 'r-stub';
 $map_canvas_paths[4][7] = 'bl-joint';
 $map_canvas_paths[5][7] = 'h-line';
 $map_canvas_paths[6][7] = 'cross';
@@ -69,7 +71,7 @@ $map_canvas_paths[9][10] = 'b-stub';
 $map_canvas_paths[12][10] = 'b-stub';
 $map_canvas_paths[15][10] = 'b-stub';
 
-// Define the events that should appear on the map (x37)
+// Define the events that should appear on the map (x40)
 $map_canvas_events[6][2] = 'battle-master/abandoned-warehouse';
 $map_canvas_events[9][2] = 'battle-master/arctic-jungle';
 $map_canvas_events[12][2] = 'battle-master/electrical-tower';
@@ -86,11 +88,14 @@ $map_canvas_events[6][5] = 'battle-mecha/abandoned-warehouse';
 $map_canvas_events[9][5] = 'battle-mecha/arctic-jungle';
 $map_canvas_events[12][5] = 'battle-mecha/electrical-tower';
 $map_canvas_events[15][5] = 'battle-mecha/clock-citadel';
+$map_canvas_events[1][6] = 'origin';
+$map_canvas_events[2][6] = 'battle-mecha/intro-field';
 $map_canvas_events[3][6] = 'battle-mecha/intro-field';
-$map_canvas_events[4][6] = 'battle-mecha/intro-field';
+$map_canvas_events[4][6] = 'battle-master/intro-field';
 $map_canvas_events[17][6] = 'battle-mecha/final-destination';
 $map_canvas_events[19][6] = 'battle-master/final-destination-2';
 $map_canvas_events[21][6] = 'battle-boss/final-destination-3';
+$map_canvas_events[23][6] = 'destination';
 $map_canvas_events[6][7] = 'battle-mecha/mountain-mines';
 $map_canvas_events[9][7] = 'battle-mecha/steel-mill';
 $map_canvas_events[12][7] = 'battle-mecha/orb-city';

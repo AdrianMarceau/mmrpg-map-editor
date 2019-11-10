@@ -59,19 +59,21 @@ $map_canvas_paths[20][7] = 'b-tee';
 $map_canvas_paths[21][7] = 'h-line';
 $map_canvas_paths[22][7] = 'br-joint';
 
-// Define the events that should appear on the map (x36)
-$map_canvas_events[2][2] = 'battle-mecha/intro-field';
+// Define the events that should appear on the map (x39)
+$map_canvas_events[2][2] = 'origin';
 $map_canvas_events[15][2] = 'battle-mecha/electrical-tower';
-$map_canvas_events[22][2] = 'battle-boss/final-destination-3';
+$map_canvas_events[22][2] = 'destination';
+$map_canvas_events[2][3] = 'battle-mecha/intro-field';
 $map_canvas_events[9][3] = 'battle-master/mountain-mines';
 $map_canvas_events[14][3] = 'battle-mecha/electrical-tower';
 $map_canvas_events[15][3] = 'battle-master/electrical-tower';
 $map_canvas_events[16][3] = 'battle-mecha/electrical-tower';
-$map_canvas_events[22][3] = 'battle-mecha/final-destination-2';
+$map_canvas_events[22][3] = 'battle-special-boss/final-destination-3';
+$map_canvas_events[2][4] = 'battle-mecha/intro-field';
 $map_canvas_events[7][4] = 'battle-mecha/orb-city';
 $map_canvas_events[9][4] = 'battle-mecha/mountain-mines';
 $map_canvas_events[10][4] = 'battle-mecha/mountain-mines';
-$map_canvas_events[22][4] = 'battle-mecha/final-destination';
+$map_canvas_events[22][4] = 'battle-master/final-destination-2';
 $map_canvas_events[5][5] = 'battle-mecha/abandoned-warehouse';
 $map_canvas_events[7][5] = 'battle-master/orb-city';
 $map_canvas_events[9][5] = 'battle-mecha/mountain-mines';
@@ -79,6 +81,7 @@ $map_canvas_events[15][5] = 'battle-mecha/oil-wells';
 $map_canvas_events[16][5] = 'battle-mecha/oil-wells';
 $map_canvas_events[17][5] = 'battle-master/oil-wells';
 $map_canvas_events[18][5] = 'battle-mecha/oil-wells';
+$map_canvas_events[22][5] = 'battle-mecha/final-destination';
 $map_canvas_events[3][6] = 'battle-mecha/abandoned-warehouse';
 $map_canvas_events[4][6] = 'battle-master/abandoned-warehouse';
 $map_canvas_events[5][6] = 'battle-mecha/abandoned-warehouse';
