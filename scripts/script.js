@@ -422,6 +422,9 @@ function reindexCellContents(){
     var cellsWithPaths = [];
     var cellsWithEvents = [];
     var cellsWithEventBattles = [];
+    var cellsWithEventBattleMechas = [];
+    var cellsWithEventBattleMasters = [];
+    var cellsWithEventBattleBosses = [];
     var cellsWithEventFields = [];
     var cellsWithProgressGates = [];
 
@@ -445,8 +448,15 @@ function reindexCellContents(){
                 cellsWithEvents.push(cellPosition);
                 if (cellContent.event === 'origin'){ originCellPosition = cellPosition; }
                 else if (cellContent.event === 'destination'){ destinationCellPosition = cellPosition; }
-                else if (cellContent.event.indexOf('battle-') !== -1){ cellsWithEventBattles.push(cellPosition); }
-                else if (cellContent.event.indexOf('progress-gate-') !== -1){ cellsWithProgressGates.push(cellPosition); }
+                else if (cellContent.event.indexOf('battle-') !== -1){
+                    cellsWithEventBattles.push(cellPosition);
+                    if (cellContent.event.indexOf('-mecha') !== -1){ cellsWithEventBattleMechas.push(cellPosition); }
+                    else if (cellContent.event.indexOf('-master') !== -1){ cellsWithEventBattleMasters.push(cellPosition); }
+                    else if (cellContent.event.indexOf('-boss') !== -1){ cellsWithEventBattleBosses.push(cellPosition); }
+                    }
+                else if (cellContent.event.indexOf('progress-gate-') !== -1){
+                    cellsWithProgressGates.push(cellPosition);
+                    }
                 }
             if ($fieldSprite.length > 0){
                 cellContent.field = $fieldSprite.attr('data-field');
@@ -464,7 +474,10 @@ function reindexCellContents(){
         withPaths: cellsWithPaths,
         withEvents: cellsWithEvents,
         withEventBattles: cellsWithEventBattles,
-        withProgressGates: cellsWithProgressGates,
+        withEventBattleMechas: cellsWithEventBattleMechas,
+        withEventBattleMasters: cellsWithEventBattleMasters,
+        withEventBattleBosses: cellsWithEventBattleBosses,
+        withProgressGates: cellsWithProgressGates
         };
 
     //console.log('globalCellIndex = ', globalCellIndex);
@@ -576,12 +589,14 @@ var destinationCellPosition = false;
 var completedEventCellsCount = 0;
 var totalEventCellsCount = 0;
 var percentComplete = 0;
+var testProgressVariables = {};
 var currentTestProgress = {};
 function enterTestMode(){
     //console.log('enterTestMode()');
     resetTestModeVariables();
     reindexCellContents();
     recalculateAllowedEventCells();
+    recalculateTestVariables();
     recalculateTestProgress();
     updateCellsWithTestModeProgress();
     generateTestModeEvents();
@@ -813,20 +828,80 @@ function testCellClickFunction($testCell, triggeredByUser){
         }
     return false;
 }
+function recalculateTestVariables(){
+    //console.log('globalCellIndex =', globalCellIndex);
+    var progressGateTotal = globalCellIndex.withProgressGates.length;
+    var eventBattleTotal = globalCellIndex.withEventBattles.length;
+    //console.log('progressGateTotal =', progressGateTotal);
+    //console.log('eventBattleTotal =', eventBattleTotal);
+    var battleKinds = ['mechas', 'masters', 'bosses'];
+    var battleKindsTotals = {};
+    var battleKindsValues = {};
+    var battleKindsValuesTotals = {};
+    var progressPointsTotal = 0;
+    for (var i = 0; i < battleKinds.length; i++){
+        var kindToken = battleKinds[i];
+        var kindName = kindToken[0].toUpperCase()+kindToken.slice(1);
+        //console.log('kindToken/Name =', kindToken, kindName);
+        var kindValue = ((i + 1) * (i + 1)) + (i > 0 ? 1 : 0);
+        battleKindsTotals[kindToken] = globalCellIndex['withEventBattle'+kindName].length;
+        battleKindsValues[kindToken] = kindValue;
+        battleKindsValuesTotals[kindToken] = battleKindsTotals[kindToken] * battleKindsValues[kindToken];
+        progressPointsTotal += battleKindsValuesTotals[kindToken];
+    }
+    //console.log('======');
+    //console.log('battleKinds =', battleKinds);
+    //console.log('battleKindsTotals =', battleKindsTotals);
+    //console.log('battleKindsValues =', battleKindsValues);
+    //console.log('battleKindsValuesTotals =', battleKindsValuesTotals);
+    //console.log('progressPointsTotal =', progressPointsTotal);
+    testProgressVariables = {
+        battleKinds: battleKinds,
+        battleKindsTotals: battleKindsTotals,
+        battleKindsValues: battleKindsValues,
+        battleKindsValuesTotals: battleKindsValuesTotals,
+        progressPointsTotal: progressPointsTotal
+        };
+    //console.log('testProgressVariables =', testProgressVariables);
+}
 function recalculateTestProgress(){
-    var battlesComplete = 0;
+
     var gatesOpened = 0;
+    var battlesComplete = 0;
+    var battleKinds = testProgressVariables.battleKinds;
+    var battleKindsComplete = {};
+    var currentProgressPoints = 0;
+    var totalProgressPoints = testProgressVariables.progressPointsTotal;
+    for (var i = 0; i < battleKinds.length; i++){ battleKindsComplete[battleKinds[i]] = 0; }
     for (var i = 0; i < completedEventCells.length; i++){
         var completedCell = completedEventCells[i];
-        if (globalCellIndex.withEventBattles.indexOf(completedCell) !== -1){ battlesComplete++; }
-        else if (globalCellIndex.withProgressGates.indexOf(completedCell) !== -1){ gatesOpened++; }
+        if (globalCellIndex.withProgressGates.indexOf(completedCell) !== -1){
+            gatesOpened++;
+        } else if (globalCellIndex.withEventBattles.indexOf(completedCell) !== -1){
+            battlesComplete++;
+            for (var j = 0; j < battleKinds.length; j++){
+                var kindToken = battleKinds[j];
+                var kindName = kindToken[0].toUpperCase()+kindToken.slice(1);
+                var kindValue = testProgressVariables.battleKindsValues[kindToken];
+                if (globalCellIndex['withEventBattle'+kindName].indexOf(completedCell) !== -1){
+                    battleKindsComplete[kindToken] += 1;
+                    currentProgressPoints += kindValue;
+                    }
+                }
+            }
         }
-    var applicableEventCellTotal = globalCellIndex.withEventBattles.length + globalCellIndex.withProgressGates.length;
-    var overallPercent = ((battlesComplete + gatesOpened) / applicableEventCellTotal) * 100;
+    //console.log('gatesOpened =', gatesOpened);
+    //console.log('battlesComplete =', battlesComplete);
+    //console.log('battleKindsComplete =', battleKindsComplete);
+    //console.log('currentProgressPoints =', currentProgressPoints, '/', totalProgressPoints);
+    //var applicableEventCellTotal = globalCellIndex.withEventBattles.length + globalCellIndex.withProgressGates.length;
+    //var overallPercent = ((battlesComplete + gatesOpened) / applicableEventCellTotal) * 100;
+    var overallPercent = (currentProgressPoints / totalProgressPoints) * 100;
     var overallPercentRounded = parseFloat(Math.round(overallPercent * 100) / 100).toFixed(2);
     currentTestProgress = {
-        battlesComplete: battlesComplete,
         gatesOpened: gatesOpened,
+        battlesComplete: battlesComplete,
+        battleKindsComplete: battleKindsComplete,
         overallPercent: overallPercent,
         overallPercentRounded: overallPercentRounded
         };
@@ -870,4 +945,8 @@ function updateTestModePallet(){
         + '<td class="stat total"><label>Total:</label> <strong>'+totalEventCellsCount+'</strong></td>'
         + '</tr>');
     */
+}
+function roundPercentForPrinting(percent, decimals){
+    if (typeof decimals === 'undefined'){ decimals = 2; }
+    return parseFloat(Math.round(percent * 100) / 100).toFixed(decimals);
 }
