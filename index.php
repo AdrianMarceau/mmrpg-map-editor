@@ -44,16 +44,17 @@ if (!empty($this_map_id)){
     <link type="text/css" rel="stylesheet" href="styles/style.css?<?= MMRPG_CACHE_DATE ?>" />
     <style type="text/css"><?= $grid_object_styles ?></style>
 </head>
-<body>
+<body class="loading">
 
     <div class="controls">
 
-        <div class="views">
+        <div class="views" data-view="all">
             <a class="button all active" data-view="all">View All</a>
             <a class="button paths" data-view="paths">Edit Paths</a>
             <a class="button events" data-view="events">Edit Events</a>
             <a class="button fields" data-view="fields">Edit Fields</a>
-            <a class="button test" data-view="test">Test</a>
+            <a class="button test enter" data-view="test">Enter Test Mode</a>
+            <a class="button test exit hidden" data-view="test">Exit Test Mode</a>
         </div>
 
         <div class="shift">
@@ -122,7 +123,7 @@ if (!empty($this_map_id)){
         Last Updated <?= preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})\-[0-9]+$/', '$1-$2-$3', MMRPG_CACHE_DATE) ?>
     </div>
 
-<script type="text/javascript" src="<?= MMRPG_BASE_ASSET_HREF ?>scripts/jquery.js"></script>
+<script type="text/javascript" src="<?= MMRPG_BASE_HREF ?>scripts/jquery.min.js"></script>
 <script type="text/javascript" src="scripts/script.js?<?= MMRPG_CACHE_DATE ?>"></script>
 <script type="text/javascript">
 
@@ -136,6 +137,11 @@ mapOptions = <?= json_encode($map_options) ?>;
 // Provide the MMRPG type, field, etc. index for use in the editor
 mmrpgTypeIndex = <?= json_encode($api_type_index) ?>;
 mmrpgFieldIndex = <?= json_encode($api_field_index) ?>;
+
+<? if (!empty($_GET['autostart']) && $_GET['autostart'] === 'true'){ ?>
+// If autostart was requested, set the global variable to true
+autoStartTestMode = true;
+<? } ?>
 
 </script>
 

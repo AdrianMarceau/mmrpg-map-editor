@@ -39,6 +39,7 @@ $api_field_tokens = array_keys($api_field_index);
 if (!empty($api_field_tokens)){ $field_options = $api_field_tokens; }
 else { $field_options = array('intro-field'); }
 $map_options['fields'] = $field_options;
+//exit();
 
 // Generate CSS for the various paths, events, fields, and types
 $grid_object_styles = array();

@@ -23,6 +23,9 @@ var mmrpgFieldIndex = {};
 var baseHref = 'http://local.dev.mmrpg-world.net/mapeditor2k17/';
 var baseAssetHref = 'http://local.prototype.mmrpg-world.net/';
 
+// Predefine the variable for autostarting test mode
+var autoStartTestMode = false;
+
 // Wait for document ready before delegating events
 $(document).ready(function(){
 
@@ -75,8 +78,10 @@ $(document).ready(function(){
         var view = $button.attr('data-view');
         $('.button[data-view]', $views).removeClass('active');
         $button.addClass('active');
+        if (view === 'test' && $button.hasClass('exit')){ view = 'all'; }
         if (oldView === 'test' && view !== 'test'){ exitTestMode(); }
         $map.attr('data-view', view);
+        $views.attr('data-view', view);
         if (view != 'all'){
             $map.attr('data-edit', view);
             $targetPallet = $pallet.filter('.'+view);
@@ -88,7 +93,7 @@ $(document).ready(function(){
             } else {
             $map.attr('data-edit', '');
             }
-        if (view === 'test'){ enterTestMode(); }
+        if (view === 'test' && $button.hasClass('enter')){ enterTestMode(); }
         });
 
     // Define the click events for PALLET CELLS
@@ -132,6 +137,12 @@ $(document).ready(function(){
 
     // Automatically export the map on init
     exportMap();
+
+    // If it's been requested, automatically enter test mode
+    if (autoStartTestMode){ $('.button[data-view="test"]', $views).get(0).click(); }
+
+    // Now that everything is loaded, we can remove the class from the map
+    $('body').removeClass('loading');
 
 });
 
@@ -575,6 +586,10 @@ function enterTestMode(){
     updateCellsWithTestModeProgress();
     generateTestModeEvents();
     updateTestModePallet();
+    $shift.addClass('hidden');
+    $tools.addClass('hidden');
+    $('.button.test.enter', $views).addClass('hidden');
+    $('.button.test.exit', $views).removeClass('hidden');
 
     /*
     // Auto click the origin cell
@@ -590,6 +605,10 @@ function enterTestMode(){
 function exitTestMode(){
     //console.log('exitTestMode()');
     resetTestModeVariables();
+    $shift.removeClass('hidden');
+    $tools.removeClass('hidden');
+    $('.button.test.enter', $views).removeClass('hidden');
+    $('.button.test.exit', $views).addClass('hidden');
 }
 function resetTestModeVariables(){
     //console.log('resetTestModeVariables()');

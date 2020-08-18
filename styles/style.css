@@ -226,6 +226,15 @@ body {
     display: none;
 }
 
+body.loading .map[data-view] .wrapper .cell .path,
+body.loading .map[data-view] .wrapper .cell .field,
+body.loading .map[data-view] .wrapper .cell .event,
+.map[data-view].loading .wrapper .cell .path,
+.map[data-view].loading .wrapper .cell .field,
+.map[data-view].loading .wrapper .cell .event {
+    opacity: 0 !important;
+}
+
 .map[data-view="test"] .wrapper .cell.locked {
     pointer-events: none;
     cursor: default;
@@ -362,7 +371,17 @@ body {
 }
 .controls .views,
 .controls .shift {
-
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+body.loading .controls .views,
+body.loading .controls .shift {
+    pointer-events: none;
+    opacity: 0;
+}
+.controls .views.hidden,
+.controls .shift.hidden {
+    display: none;
 }
 .controls .views {
     float: left;
@@ -416,6 +435,18 @@ body {
     pointer-events: none;
     text-decoration: line-through;
 }
+.controls .views .button.hidden,
+.controls .shift .button.hidden {
+    display: none;
+}
+
+.controls .views[data-view="test"] {
+    width: 100%;
+    text-align: center;
+}
+.controls .views[data-view="test"] .button:not([data-view="test"]) {
+    display: none;
+}
 
 .tools {
     display: block;
@@ -444,6 +475,9 @@ body {
 .tools button.export {
     float: right;
     clear: left;
+}
+.tools.hidden {
+    display: none;
 }
 
 .version {

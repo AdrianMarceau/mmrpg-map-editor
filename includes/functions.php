@@ -10,6 +10,8 @@ function load_map_data_from_json($canvas_data_file,
     $canvas_data_json = file_get_contents($canvas_data_file);
     //echo('<pre>$canvas_data_json = '.print_r($canvas_data_json, true).'</pre>');
     if (empty($canvas_data_json) || substr($canvas_data_json, 0, 1) !== '{'){ return false; }
+    // Before we decode anything, let's manually replace deprecated field names
+    $canvas_data_json = str_replace('"intro-field"', '"gentle-countryside"', $canvas_data_json);
     // Attempt to parse the json data file into an object
     $canvas_data_object = json_decode($canvas_data_json, true);
     //echo('<pre>$canvas_data_object = '.print_r($canvas_data_object, true).'</pre>');
@@ -181,6 +183,7 @@ function call_api($url, $data = false, $method = 'post'){
     //curl_setopt($curl, CURLOPT_USERPWD, "username:password"); //optional
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
     $result = curl_exec($curl);
     curl_close($curl);
     return $result;
@@ -192,6 +195,8 @@ function call_json_api($url, $data = false, $method = 'post'){
     if (empty($api_data)){ return false; }
     if (substr($api_data, 0, 1) === '{'){ $json_data = json_decode($api_data, true); }
     else { $json_data = array('response' => $api_data); }
+    //echo('<pre>call_json_api('.print_r($url, true).', '.print_r($data, true).', '.print_r($method, true).')</pre>');
+    //echo('<pre>$json_data = '.print_r($json_data, true).'</pre>');
     return $json_data;
 }
 
