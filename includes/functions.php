@@ -104,7 +104,7 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                             $field_image = MMRPG_BASE_ASSET_HREF.'images/fields/'.$field_token.'/battle-field_avatar.png';
                             //$cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'" src="'.$field_image.'" />';
                             $cell_markup .= '<div class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'"></div>';
-                            $cell_title .= ' | '.$field_token;
+                            //$cell_title .= ' | '.$field_token;
                         }
 
                         if (strstr($grid_class, 'pallet')){
@@ -132,7 +132,7 @@ function generate_map_grid($num_cols, $num_rows, $grid_class = '', $grid_sprites
                         $field_image = MMRPG_BASE_ASSET_HREF.'images/fields/'.$field_token.'/battle-field_avatar.png';
                         //$cell_markup .= '<img class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'" src="'.$field_image.'" />';
                         $cell_markup .= '<div class="sprite field '.$field_class.'" data-field="'.$field_token.'" data-type="'.$field_type.'"></div>';
-                        $cell_title .= ' | '.$field_token;
+                        //$cell_title .= ' | '.$field_token;
 
                         if (strstr($grid_class, 'pallet')){
                             $cell_title = $field_data[0];
