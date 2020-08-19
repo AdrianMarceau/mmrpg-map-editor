@@ -581,6 +581,7 @@ var $testMap = false;
 var $testCanvas = false;
 var $testPallets = false;
 var $testCanvasCells = false;
+var $testPalletBody = false;
 var $originCell = false;
 var orginClickTimeout = false;
 var originCellPosition = false;
@@ -600,6 +601,7 @@ function enterTestMode(){
     recalculateTestProgress();
     updateCellsWithTestModeProgress();
     generateTestModeEvents();
+    resetTestModePallet();
     updateTestModePallet();
     $shift.addClass('hidden');
     $tools.addClass('hidden');
@@ -637,6 +639,7 @@ function resetTestModeVariables(){
     $testCanvas = $('.grid.canvas', $testMap);
     $testPallets = $('.grid.pallet', $testMap);
     $testCanvasCells = $('.cell[data-col][data-row]', $testCanvas);
+    $testPalletBody = $testPallets.filter('.test').find('tbody');
     $originCell = $testCanvasCells.find('.sprite.origin').parent();
     $destinationCell = $testCanvasCells.find('.sprite.destination').parent();
     originCellPosition = $originCell.attr('data-col')+'-'+$originCell.attr('data-row');
@@ -646,6 +649,7 @@ function resetTestModeVariables(){
         .removeClass('allowed')
         .removeClass('completed')
         ;
+    $map.removeClass('test-mode-complete');
     //console.log('cells = ', $testCanvasCells.length);
 }
 function preloadAllowedEventCells(){
@@ -821,6 +825,9 @@ function testCellClickFunction($testCell, triggeredByUser){
                     updateCellsWithTestModeProgress();
                     updateTestModePallet();
                     autoCompleteAdjacentPathOnlyCells(cellToken);
+                    if (eventKind === 'destination' && !$map.hasClass('test-mode-complete')){
+                        $map.addClass('test-mode-complete');
+                        }
                     return true;
                     }
                 }
@@ -907,44 +914,34 @@ function recalculateTestProgress(){
         };
     return currentTestProgress;
 }
-function updateTestModePallet(){
-    //console.log('updateTestModePallet()');
-    var $testPalletBody = $testPallets.filter('.test').find('tbody');
+function resetTestModePallet(){
+    //console.log('resetTestModePallet()');
     $testPalletBody.empty();
-
     $testPalletBody.append('<tr class="cell-stats">'
         + '<td class="stat label"><strong>Cell Stats</strong></td>'
-        + '<td class="stat total"><label>Total:</label> <strong>'+globalCellIndex.withContent.length+'</strong></td>'
-        + '<td class="stat paths"><label>w/ Paths</label> <strong>'+globalCellIndex.withPaths.length+'</strong></td>'
-        + '<td class="stat battles"><label>w/ Battles</label> <strong>'+globalCellIndex.withEventBattles.length+'</strong></td>'
-        + '<td class="stat gates"><label>w/ Gates</label> <strong>'+globalCellIndex.withProgressGates.length+'</strong></td>'
+        + '<td class="stat total"><label>Total:</label> <strong>0</strong></td>'
+        + '<td class="stat paths"><label>w/ Paths</label> <strong>0</strong></td>'
+        + '<td class="stat battles"><label>w/ Battles</label> <strong>0</strong></td>'
+        + '<td class="stat gates"><label>w/ Gates</label> <strong>0</strong></td>'
         + '</tr>');
-
     $testPalletBody.append('<tr class="test-progress">'
         + '<td class="stat label"><strong>Progress</strong></td>'
-        + '<td class="stat total"><label>Battles:</label> <strong>'+currentTestProgress.battlesComplete+' / '+globalCellIndex.withEventBattles.length+'</strong></td>'
-        + '<td class="stat complete"><label>Gates:</label> <strong>'+currentTestProgress.gatesOpened+' / '+globalCellIndex.withProgressGates.length+'</strong></td>'
-        + '<td class="stat percent" colspan="2"><label>Overall Percent:</label> <strong>'+currentTestProgress.overallPercentRounded+'%</strong></td>'
+        + '<td class="stat battles"><label>Battles:</label> <strong>0 / 0</strong></td>'
+        + '<td class="stat gates"><label>Gates:</label> <strong>0 / 0</strong></td>'
+        + '<td class="stat percent" colspan="2"><label>Overall Percent:</label> <strong>0%</strong></td>'
         + '</tr>');
-
-    /*
-    $testPalletBody.append('<tr>'
-        + '<td class="stat completed"><label>Battles Complete:</label> <strong>'+completedEventCellsCount+'</strong></td>'
-        + '<td class="stat total"><label>Battles Total:</label> <strong>'+totalEventCellsCount+'</strong></td>'
-        + '<td class="stat progress"><label>Battle Progress:</label> <strong>'+Math.ceil(percentComplete)+'%</strong></td>'
-        //+ '<td class="stat allowed"><label>Allowed</label> <strong>'+allowedEventCells.length+'</strong></td>'
-        + '<td class="stat progress"><label>Battle Progress:</label> <strong>'+Math.ceil(percentComplete)+'%</strong></td>'
-        + '<td class="stat total"><label>Cells w/ Events:</label> <strong>'+totalEventCellsCount+'</strong></td>'
-        + '</tr>');
-
-    $testPalletBody.append('<tr>'
-        + '<td class="stat completed"><label>Complete:</label> <strong>'+completedEventCellsCount+'</strong></td>'
-        + '<td class="stat total"><label>Total:</label> <strong>'+totalEventCellsCount+'</strong></td>'
-        //+ '<td class="stat allowed"><label>Allowed</label> <strong>'+allowedEventCells.length+'</strong></td>'
-        + '<td class="stat progress"><label>Progress:</label> <strong>'+Math.ceil(percentComplete)+'%</strong></td>'
-        + '<td class="stat total"><label>Total:</label> <strong>'+totalEventCellsCount+'</strong></td>'
-        + '</tr>');
-    */
+}
+function updateTestModePallet(){
+    //console.log('updateTestModePallet()');
+    var $cellStatsRow = $testPalletBody.find('tr.cell-stats');
+    $cellStatsRow.find('.stat.total strong').html(globalCellIndex.withContent.length);
+    $cellStatsRow.find('.stat.paths strong').html(globalCellIndex.withPaths.length);
+    $cellStatsRow.find('.stat.battles strong').html(globalCellIndex.withEventBattles.length);
+    $cellStatsRow.find('.stat.gates strong').html(globalCellIndex.withProgressGates.length);
+    var $testProgressRow = $testPalletBody.find('tr.test-progress');
+    $testProgressRow.find('.stat.battles strong').html(currentTestProgress.battlesComplete+' / '+globalCellIndex.withEventBattles.length);
+    $testProgressRow.find('.stat.gates strong').html(currentTestProgress.gatesOpened+' / '+globalCellIndex.withProgressGates.length);
+    $testProgressRow.find('.stat.percent strong').html(currentTestProgress.overallPercentRounded+'%');
 }
 function roundPercentForPrinting(percent, decimals){
     if (typeof decimals === 'undefined'){ decimals = 2; }

@@ -133,6 +133,19 @@ body {
     display: table;
 }
 
+.map .wrapper .grid tr.test-progress td.stat.percent {
+    transition: background-color 2s;
+}
+.map .wrapper .grid tr.test-progress td.stat.percent strong {
+    transition: color 2s;
+}
+.map.test-mode-complete .wrapper .grid tr.test-progress td.stat.percent {
+    background-color: #3c5d37;
+}
+.map.test-mode-complete .wrapper .grid td.stat.percent strong {
+    color: #00cc74;
+}
+
 
 .map .wrapper .cell .sprite {
     display: block;
