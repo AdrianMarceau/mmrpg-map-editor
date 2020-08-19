@@ -42,6 +42,7 @@ if (!empty($this_map_id)){
 <head>
     <title><?= !empty($map_canvas_info['name']) ? ucfirst($map_canvas_info['name']).' | ' : '' ?>Overworld Test</title>
     <link type="text/css" rel="stylesheet" href="styles/style.css?<?= MMRPG_CACHE_DATE ?>" />
+    <link type="text/css" rel="stylesheet" href="styles/style-responsive.css?<?= MMRPG_CACHE_DATE ?>" />
     <style type="text/css"><?= $grid_object_styles ?></style>
 </head>
 <body class="loading">

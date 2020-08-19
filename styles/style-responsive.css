@@ -1,0 +1,136 @@
+@media screen and (max-width: 1024px){
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    .map {
+        border-left: 0 none transparent;
+        border-right: 0 none transparent;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        width: 100%;
+        padding: 10px;
+    }
+    .map .wrapper {
+        padding: 10px;
+    }
+    .map .wrapper .grid {
+        width: 100% !important;
+    }
+
+    .controls {
+        width: auto;
+        max-width: none;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .controls .views,
+    .controls .shift {
+        float: none;
+        clear: both;
+        width: 100%;
+        text-align: center;
+        margin: 0 auto 10px;
+    }
+
+    .tools {
+        width: auto;
+        max-width: none;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .map .wrapper .grid td,
+    .map .wrapper .cell,
+    .map .wrapper .cell .sprite,
+    .map .wrapper .cell .event:after {
+        overflow: hidden;
+        width: calc((100vw - 44px) / 23);
+        height: calc((100vw - 44px) / 23);
+    }
+    .map .wrapper .cell .sprite {
+        background-size: 100% 100%;
+        background-size: contain;
+        background-position: center center;
+    }
+    .map .wrapper .cell .event:after {
+        background-size: auto 100%;
+    }
+
+    .map .wrapper .cell .field.battle-mecha,
+    .map .wrapper .cell .field.battle-special-mecha {
+        width: calc((18 / 40) * 100%);
+        height: calc((18 / 40) * 100%);
+        top: calc((11 / 40) * 100%);
+        left: calc((11 / 40) * 100%);
+    }
+    .map .wrapper .cell .event.battle-mecha:after,
+    .map .wrapper .cell .event.battle-special-mecha:after {
+        background-position: calc(((100vw - 44px) / 23) * -1) 0;
+    }
+
+    .map .wrapper .cell .field.battle-master,
+    .map .wrapper .cell .field.battle-special-master {
+        width: calc((26 / 40) * 100%);
+        height: calc((26 / 40) * 100%);
+        top: calc((7 / 40) * 100%);
+        left: calc((7 / 40) * 100%);
+    }
+    .map .wrapper .cell .event.battle-master:after,
+    .map .wrapper .cell .event.battle-special-master:after {
+        background-position: calc(((100vw - 44px) / 23) * -2) 0;
+    }
+
+    .map .wrapper .cell .field.battle-boss,
+    .map .wrapper .cell .field.battle-special-boss {
+        width: calc((32 / 40) * 100%);
+        height: calc((32 / 40) * 100%);
+        top: calc((4 / 40) * 100%);
+        left: calc((4 / 40) * 100%);
+    }
+    .map .wrapper .cell .event.battle-boss:after,
+    .map .wrapper .cell .event.battle-special-boss:after {
+        background-position: calc(((100vw - 44px) / 23) * -3) 0;
+    }
+
+}
+
+@media screen and (max-width: 700px){
+
+    .map .wrapper .grid tr.cell-stats,
+    .map .wrapper .grid tr.test-progress {
+        display: block;
+    }
+    .map .wrapper .grid tr.cell-stats:after,
+    .map .wrapper .grid tr.test-progress:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+    .map .wrapper .grid tr.cell-stats td,
+    .map .wrapper .grid tr.test-progress td {
+        display: block;
+        float: left;
+        box-sizing: border-box;
+        height: auto;
+        width: 25%;
+        border: 0 none transparent;
+        padding: 6px;
+        vertical-align: middle;
+        line-height: 1.6;
+        font-size: 70%;
+    }
+    .map .wrapper .grid tr.cell-stats td.label,
+    .map .wrapper .grid tr.test-progress td.label {
+        width: 100%;
+        clear: both;
+        border-top: 1px solid #202020;
+        border-bottom: 1px solid #202020;
+    }
+    .map .wrapper .grid tr.test-progress td.stat.percent {
+        width: 50%;
+    }
+
+}
